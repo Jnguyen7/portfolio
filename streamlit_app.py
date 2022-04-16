@@ -622,11 +622,11 @@ elif choose == "Full Projects":
     col1, col2,col3= st.columns(3)
     with col1:  
         if st.button('Read PDF',key='7'):            
-            show_pdf('pdfs/Flu_Vaccination_project.pdf')
+            show_pdf('pdfs/Flu_Vaccination_Project.pdf')
     with col2:
         st.button('Close PDF',key='8')                   
     with col3:
-        download_pdf('pdfs/Flu_Vaccination_project.pdf')
+        download_pdf('pdfs/Flu_Vaccination_Project.pdf')
 
     st.markdown("---")
 
