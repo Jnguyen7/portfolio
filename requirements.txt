@@ -143,7 +143,6 @@ pytz==2021.3
 pytz-deprecation-shim==0.1.0.post0
 pyu2f==0.1.5
 pywinpty==1.1.6
-PyYAML==6.0
 pyzmq==22.3.0
 requests==2.27.1
 requests-html==0.10.0
