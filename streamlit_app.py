@@ -771,7 +771,7 @@ elif choose == "Archive":
             code_self_join = '''SELECT e.employee_id, e.employee_name, m.employee_id, m.employee_name
     FROM employees e
     LEFT JOIN employees m
-    ON e.employee_id = m.employee_id;'''
+    ON e.manager_id = m.employee_id;'''
 
             st.code(code_self_join, language='sql')
 
