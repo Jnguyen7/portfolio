@@ -1,4 +1,4 @@
-from tkinter import HORIZONTAL
+#from tkinter import HORIZONTAL
 from turtle import width
 from streamlit_option_menu import option_menu
 import time
@@ -7,7 +7,7 @@ import base64
 # import libraries for data backend
 from modulefinder import STORE_NAME
 import re
-from tkinter.font import names
+#from tkinter.font import names
 from tracemalloc import start
 from unicodedata import name
 from bs4 import BeautifulSoup
