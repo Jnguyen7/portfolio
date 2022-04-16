@@ -722,10 +722,8 @@ elif choose == "Archive":
 
 
     if choose == "SQL":
-        sql_df = pd.read_csv('csv_files/sql_df.csv')
-        department_df = pd.read_csv('csv_files/sql_department.csv')
-        choose_sql = option_menu(None,["Important SQl Functions",],
-                            icons=['list'],
+        choose_sql = option_menu(None,["Important SQl Functions", "Recursion/Looping in SQL"],
+                            icons=['list', 'list'],
                             styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
@@ -733,10 +731,13 @@ elif choose == "Archive":
         "nav-link-selected": {"background-color": "#ddbea9"},
         }
         )
-        df_col1, df_col2 = st.columns([2,1])
-        with df_col1: st.dataframe(sql_df)
-        with df_col2: st.dataframe(department_df)
+        
         if choose_sql == "Important SQl Functions":
+            sql_df = pd.read_csv('csv_files/sql_df.csv')
+            department_df = pd.read_csv('csv_files/sql_department.csv')
+            df_col1, df_col2 = st.columns([2,1])
+            with df_col1: st.dataframe(sql_df)
+            with df_col2: st.dataframe(department_df)
             st.markdown(""" <style> .font {
             font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
             </style> """, unsafe_allow_html=True)
@@ -800,6 +801,54 @@ elif choose == "Archive":
     ;'''
             st.code(code_max, language='sql')
 
+        if choose_sql == "Recursion/Looping in SQL":
+            sql_df = pd.read_csv('csv_files/physicians.csv')
+            st.dataframe(sql_df)
+            st.markdown(""" <style> .font {
+            font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+            </style> """, unsafe_allow_html=True)
+            st.markdown('<p class="font">Finding The Foward Chain</p>', unsafe_allow_html=True)  
+            st.write('Assuming physcians can only refer patients to one physican, find which physician refers to 300000003 and the physican who refers to the former, ect.')
+        
+            code_find_foward = '''With RECURSIVE referrals(Referral_from) AS
+    (SELECT refers_to
+        FROM physicians
+        WHERE employeeID = 300000003
+    UNION ALL
+    SELECT physicians.refers_to
+        FROM referrals
+        INNER JOIN physicians
+            ON referrals.employeeID = physicians.referral_from
+    )
+    SELECT referrals.referral_from, CONCAT(physicians.first_name, ' ',physicians.surname) AS physician_name
+        FROM referrals
+        INNER JOIN physicians
+            ON referrals.referral_from = physicians.employeeID
+        ORDER BY physicians.employeeID DESC;'''
+
+            st.code(code_find_foward, language='sql')
+
+            st.markdown('<p class="font">Finding The Reverse Chain</p>', unsafe_allow_html=True)
+            st.write('Assuming physcians can only refer patients to one physican, Using Recursive, return the downward referral chain for physician 300000002, i.e., find which physician refers to this physican and the physican who refers to the former, ect.')
+        
+            code_find_reverse = '''With RECURSIVE referrals(EmployeeID) AS
+    (SELECT employeeID
+        FROM physicians
+        WHERE refers_to = 300000002
+    UNION ALL
+    SELECT physicians.employeeID
+        FROM referrals
+        INNER JOIN physicians
+            ON referrals.employeeID = physicians.refers_to
+    )
+    SELECT referrals.employeeID, CONCAT(physicians.first_name, ' ',physicians.surname) AS physician_name
+        FROM referrals
+        INNER JOIN physicians
+            ON referrals.employeeID = physicians.employeeID
+        ORDER BY referrals.employeeID'''
+
+            st.code(code_find_reverse, language='sql')  
+           
 
 elif choose == "About Me & Contact":
     col1, col2 = st.columns( [0.8, 0.2])
