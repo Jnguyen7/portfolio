@@ -596,11 +596,11 @@ elif choose == "Full Projects":
     col1, col2,col3= st.columns(3)
     with col1:  
         if st.button('Read PDF',key='5'):            
-            show_pdf('pdfs/weather_data.pdf')
+            show_pdf('pdfs/Weather_Data.pdf')
     with col2:
         st.button('Close PDF',key='6')                   
     with col3:
-        download_pdf('pdfs/weather_data.pdf')
+        download_pdf('pdfs/Weather_Data.pdf')
 
     st.markdown("---")
 
