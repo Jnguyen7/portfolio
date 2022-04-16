@@ -670,10 +670,10 @@ elif choose == "Full Projects":
             st.markdown("Tools: R")
     col1, col2,col3= st.columns(3)
     with col1:  
-        if st.button('Read PDF',key='9'):            
+        if st.button('Read PDF',key='11'):            
             show_pdf('pdfs/R_Life.pdf')
     with col2:
-        st.button('Close PDF',key='10')                   
+        st.button('Close PDF',key='12')                   
     with col3:
         download_pdf('pdfs/R_Life.pdf')
 
