@@ -1,5 +1,6 @@
 #from tkinter import HORIZONTAL
 #from turtle import width
+from pyparsing import col
 from streamlit_option_menu import option_menu
 import time
 import base64
@@ -722,8 +723,8 @@ elif choose == "Archive":
 
 
     if choose == "SQL":
-        choose_sql = option_menu(None,["Important SQl Functions", "Recursion/Looping in SQL"],
-                            icons=['list', 'list'],
+        choose_sql = option_menu(None,["Important SQl Functions", "Recursion/Looping in SQL", "Case Statements", 'Ranking Functions', 'Analytic Functions'],
+                            icons=['list', 'list', 'list', 'list', 'list'],
                             styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
@@ -736,8 +737,12 @@ elif choose == "Archive":
             sql_df = pd.read_csv('csv_files/sql_df.csv')
             department_df = pd.read_csv('csv_files/sql_department.csv')
             df_col1, df_col2 = st.columns([2,1])
-            with df_col1: st.dataframe(sql_df)
-            with df_col2: st.dataframe(department_df)
+            with df_col1: 
+                st.subheader('Employee Table')
+                st.dataframe(sql_df)
+            with df_col2: 
+                st.subheader('Department Table')
+                st.dataframe(department_df)
             st.markdown(""" <style> .font {
             font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
             </style> """, unsafe_allow_html=True)
@@ -803,6 +808,7 @@ elif choose == "Archive":
 
         if choose_sql == "Recursion/Looping in SQL":
             sql_df = pd.read_csv('csv_files/physicians.csv')
+            st.subheader('Employee Table')
             st.dataframe(sql_df)
             st.markdown(""" <style> .font {
             font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
@@ -850,6 +856,142 @@ elif choose == "Archive":
             st.code(code_find_reverse, language='sql')  
            
 
+        if choose_sql == "Case Statements":
+            phys_df = pd.read_csv('csv_files/physicians.csv')
+            meds_df = pd.read_csv('csv_files/medications.csv')
+            ptns_df = pd.read_csv('csv_files/patients.csv')
+            RX_df = pd.read_csv('csv_files/prescription.csv')
+            df_col1,df_col2 = st.columns(2)
+            df_col3,df_col4 = st.columns(2)
+
+            with df_col1: 
+                st.subheader('Physicians Table') 
+                st.dataframe(phys_df)
+            with df_col2: 
+                st.subheader('Medications Table') 
+                st.dataframe(meds_df)
+            with df_col3: 
+                st.subheader('Patient Table') 
+                st.dataframe(ptns_df)
+            with df_col4: 
+                st.subheader('RX Table')
+                st.dataframe(RX_df)
+            
+            
+            st.markdown(""" <style> .font {
+            font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+            </style> """, unsafe_allow_html=True)
+            st.markdown('<p class="font">Categorizing Based On Numerical Varibles</p>', unsafe_allow_html=True)  
+            st.subheader(' Return list of all medications brought by patients in our hospital of all time long with the total cost while remembering that patients who were prescribed a medication from a physician that is not their PCP will cost twice as much. In our case, the cost of the medication is per single 1 unit dose.')
+        
+            code_ptn_pcp = '''SELECT
+    MRN, PCP
+    FROM patients;
+    '''
+            st.write('First, lets output patients with their PCP.')
+            st.code(code_ptn_pcp, language='sql')
+
+            code_pcp_rx = '''SELECT
+    physicianID, patient
+    FROM medications
+        WHERE (physicianID, patient) IN
+    (
+    SELECT
+        MRN, PCP
+        FROM patients
+    );
+    '''
+            st.write('Next, we will group patients who were prescribed medications by their PCP.')
+            st.code(code_pcp_rx, language='sql')
+
+
+            code_answer = '''SELECT
+    RX.name, 
+    SUM(med.dose * RX.cost * 
+        CASE
+            WHEN
+                (med.physicianID, med.patient) IN
+                    SELECT
+                        physicianID, patient
+                        FROM medications
+                            WHERE (physicianID, patient) IN
+                                (
+                                SELECT
+                                    MRN, PCP
+                                    FROM patients
+                                ) THEN 1
+            ELSE 2 --Remember to double price for patients not prescribed by their PCP
+        END)::FLOAT AS total_cost
+    FROM RX
+        LEFT JOIN medications med
+            ON RX.code = med.medication
+        GROUP BY RX.code,
+        ORDER BY RX.code
+;
+    '''
+            st.write('Finally, we use CASE statements to categorize our numerical variables and answer the prompt.')
+            st.code(code_answer, language='sql')
+
+        if choose_sql == "Ranking Functions":
+            st.markdown(""" <style> .font {
+            font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+            </style> """, unsafe_allow_html=True)
+            st.markdown('<p class="font">Ranking Functions</p>', unsafe_allow_html=True) 
+            st.write('Calculates the ranking of each row within each group. This is useful for selecting the top N records per group')
+
+            st.subheader('ROW_NUMBER()')
+            st.warning('Function numbers all rows sequentially.')
+            st.subheader('RANK()')
+            st.warning('Function ranks all rows but will rank repeated measures (ties) with the same ranking value, i.e, gaps.')
+            st.subheader('DENSE_RANK()')
+            st.warning('Function ranks all rows but will skip ranks for repeated measures (ties), i.e. no gaps.')
+
+
+            code_ranking = ''' SELECT value,
+    ROW_NUMBER(value) OVER(ORDER BY value ASC) AS 'row_num',
+    RANK(value) OVER(ORDER BY value ASC) AS 'row_rank',
+    DENSE_RANK(value) OVER(ORDER BY value ASC) AS 'dense_row_rank'
+FROM table;'''
+
+            st.code(code_ranking, language='sql')
+            ranking = [[3,1,1,1], [4,2,2,2], [5,3,3,3], [5,4,3,3], [7,5,5,4], [7,6,5,4], [8,7,7,5]]
+            ranking_df = pd.DataFrame(data=ranking, columns=['value', 'row_num', 'row_rank', 'dense_row_rank'])
+
+            st.dataframe(ranking_df)
+
+        if choose_sql == "Analytic Functions":
+            st.markdown(""" <style> .font {
+            font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+            </style> """, unsafe_allow_html=True)
+            st.markdown('<p class="font">Analytical Functions</p>', unsafe_allow_html=True) 
+            st.write('Accesses the values of multiple rows in a window. Can be used to compare multiple rows and calculates the difference between rows.')
+            st.error('Offset value cannot be negative')
+
+            st.subheader('LAG()')
+            st.warning('Accesses rows before current row.')
+
+            st.subheader('LEAD()')
+            st.warning('Accesses rows after current row.')
+
+            code_anal = '''SELECT value,
+    LAG(value, 2) OVER(ORDER BY value ASC) AS 'Lag',
+    LEAD(value, 2) OVER(ORDER BY value ASC) AS 'Lead'
+FROM table;'''
+            
+            anal = [['3','Null','5'], ['4','Null','5'], ['5','3','7'], ['5','4','7'], ['7','5','8'], ['7','5','Null'], ['8','7','Null']]
+            anal_df = pd.DataFrame(data=anal, columns=['value', 'LAG', 'LEAD'])
+
+            st.code(code_anal, language='sql')
+            st.dataframe(anal_df)
+
+
+
+
+
+
+
+
+
 elif choose == "About Me & Contact":
     col1, col2 = st.columns( [0.8, 0.2])
     with col1:               # To display the header text using css style
@@ -861,7 +1003,8 @@ elif choose == "About Me & Contact":
     port_pic = st.image('images/PortfolioPic.jpg', use_column_width=False)
 
     st.write("I graduated from the University of Texas at Austin with a BSc. in Mathematics with emphasis in the Health Sciences. I possess three years of experience in designing, executing and maintaining large datasets for private industry and academic research in the health sciences and health care field. Additionally, I have a background in computational and statistical analysis including Machine Learning. I am a subservient individual with strong communication skills with both technical and non-technical audiences.")    
- 
+    st.write("---")
+    st.write("email: jnguyen7[at]utexas[dot]edu")
 
 elif choose == 'Find A GPU':
 
