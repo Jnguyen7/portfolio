@@ -1,0 +1,9 @@
+code,name,brand,Drug_class,cost,description
+1,Metoprolol,Lopressor,Beta Blockers,50,"It can treat high blood pressure, chest pain (angina), and heart failure. This may lower the risk of death after a heart attack."
+2,Atorvastatin,Lipitor,Statin,50,"It can treat high cholesterol and triglyceride levels. This may reduce the risk of angina, stroke, heart attack, and heart and blood vessel problems."
+3,Metformin,Glucophage,Antihyperglycemic ,1000,It can treat type 2 diabetes.
+4,Tadalafil,Cialis,Vasodilator,5000,It can treat erectile dysfunction and enlarged prostate (benign prostatic hyperplasia). It can also treat high blood pressure in the lungs (pulmonary arterial hypertension).
+5,Azithromycin,Z-pak,Antibiotics,100,"It can treat various types of infections, including pink eye (bacterial conjunctivitis)."
+6,Penicillin,,Antibiotics,1000,"Penicillins are a group of antibiotics originally obtained from Penicillium moulds, principally P. chrysogenum and P. rubens. Most penicillins in clinical use are chemically synthesised from naturally-produced penicillins"
+7,Ciprofloxacin,Cetraxal,Antibiotics,1000,It can treat infections.
+8,Clindamycin,Clindamycin,Antibiotics,1000,"It can treat various types of infections, including skin and vaginal infections."
