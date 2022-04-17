@@ -723,14 +723,15 @@ elif choose == "Archive":
 
 
     if choose == "SQL":
-        choose_sql = option_menu(None,["Important SQl Functions", "Recursion/Looping in SQL", "Case Statements", 'Ranking Functions', 'Analytic Functions'],
-                            icons=['list', 'list', 'list', 'list', 'list'],
+        choose_sql = option_menu(None,["Important SQl Functions", "Recursion/Looping in SQL", "Case Statements", 'Ranking Functions', 'Analytic Functions', 'Modifying Data', 'Date', 'Strings'],
+                            icons=['list', 'list', 'list', 'list', 'list', 'list', 'list', 'list'],
                             styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
         "nav-link-selected": {"background-color": "#ddbea9"},
-        }
+        },
+        orientation = 'horizontal'
         )
         
         if choose_sql == "Important SQl Functions":
@@ -984,13 +985,78 @@ FROM table;'''
             st.code(code_anal, language='sql')
             st.dataframe(anal_df)
 
+        if choose_sql == "Modifying Data":
+            st.markdown(""" <style> .font {
+            font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+            </style> """, unsafe_allow_html=True)
+            st.markdown('<p class="font">Modifying Data</p>', unsafe_allow_html=True) 
+            st.write('Operations that alter data like inserting, updating and deleting information from a table are collectively known as Data Manipulation Language, DML. On the other hand, Data Definition Language, DDL, is used to define the data structure itself. For example, creating and changing tables are examples of a DDL.')
+            
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.subheader('Members')
+                st.write('''
+    | memid         | integer      |
+    |---------------|--------------|
+    | firstname     | varchar(200) |
+    | surname       | varchar(200) |
+    | address       | varchar(200) |
+    | zipcode       | integer      |
+    | telephone     | varchar(20)  |
+    | recommendedby | integer      |
+    | joindate      | timestamp    |
+                ''')
+            with col2:
+                st.subheader('Bookings')
+                st.write('''
+    | facid     | integer   |
+    |-----------|-----------|
+    | memid     | integer   |
+    | starttime | timestamp |
+    | slots     | integer   |                
+                ''')
+            with col3:
+                st.subheader('Facilities')
+                st.write('''
+| facid              | integer      |
+|--------------------|--------------|
+| name               | varchar(200) |
+| membercost         | float        |
+| guestcost          | float        |
+| initialoutlay      | float        |
+| monthlymaintenance | float        |             
+    ''')
 
+            st.markdown('---')
+            st.header('Adding New Values To A Table')
+            st.write('The website club is adding a new facility - Amazon. We need to add it into the facilities table.')
+            st.code('''UPDATE TABLE facilities VALUES (9, 'Amazon', 20, 30, 100000, 800);''', language='sql')
 
+            st.header('Inserting New Values To A Table Automatically')
+            st.write('The website club is adding a new facility - Tesla. We need to add it into the facilities table with the next available facility id.')
+            st.code('''UPDATE TABLE facilities VALUES ((SELECT MAX(facid) FROM facilities)+1, 'Tesla', 50, 60, 1500000, 1000);''', language='sql')
 
+            st.header('Updating Existing Data')
+            st.write('Amazon has increased its member and guest cost to 40 and 50 USD, respectively. Please update this in the facilities table.')
+            st.code('''UPDATE TABLE facilities 
+    SET membercost = 40,
+    guestcost = 50
+    WHERE name = 'Amazon';''', language='sql')
 
+            st.header('Updating Data Based On The Contents Of Another Row')
+            st.write('Amazon is building a new facility that costs 10 percent less than the facility at Tesla. Please update this in the facilities table.')
+            st.code('''UPDATE TABLE facilities 
+    SET initialoutlay = 0.90 * (SELECT intialoutlay FROM facilities WHERE name = 'Tesla')
+    WHERE name = 'Amazon';''', language='sql')
 
+            st.header('Deleting Existing Data')
+            st.write('Delete the facilities table.')
+            st.code('''DELETE FROM facilities;''', language='sql')
 
-
+            st.header('Deleting Existing Data Bassed On A Subquery')
+            st.write('Delete members who are not enrolled in any facilities.')
+            st.code('''DELETE FROM members 
+    WHERE memid NOT IN (SELECT memid FROM bookings);''', language='sql')
 
 elif choose == "About Me & Contact":
     col1, col2 = st.columns( [0.8, 0.2])
