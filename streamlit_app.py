@@ -723,15 +723,15 @@ elif choose == "Archive":
 
 
     if choose == "SQL":
-        choose_sql = option_menu(None,["Important SQl Functions", "Recursion/Looping in SQL", "Case Statements", 'Ranking Functions', 'Analytic Functions', 'Modifying Data', 'Date', 'Strings'],
-                            icons=['list', 'list', 'list', 'list', 'list', 'list', 'list', 'list'],
+        choose_sql = option_menu(None,["Important SQl Functions", "Recursion/Looping in SQL", "Case Statements", 'Aggregate Functions','Rollups','Ranking Functions', 'Analytic Functions', 'Modifying Data', 'Date', 'Strings'],
+                            icons=['list', 'list', 'list', 'list', 'list','list', 'list', 'list', 'list', 'list'],
                             styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
         "nav-link-selected": {"background-color": "#ddbea9"},
         },
-        orientation = 'horizontal'
+        #orientation = 'horizontal'
         )
         
         if choose_sql == "Important SQl Functions":
@@ -1028,35 +1028,104 @@ FROM table;'''
     ''')
 
             st.markdown('---')
-            st.header('Adding New Values To A Table')
+            st.markdown('<p class="font">Adding New Values To A Table</p>', unsafe_allow_html=True) 
             st.write('The website club is adding a new facility - Amazon. We need to add it into the facilities table.')
             st.code('''UPDATE TABLE facilities VALUES (9, 'Amazon', 20, 30, 100000, 800);''', language='sql')
 
-            st.header('Inserting New Values To A Table Automatically')
+            st.markdown('<p class="font">Inserting New Values To A Table Automatically</p>', unsafe_allow_html=True) 
             st.write('The website club is adding a new facility - Tesla. We need to add it into the facilities table with the next available facility id.')
             st.code('''UPDATE TABLE facilities VALUES ((SELECT MAX(facid) FROM facilities)+1, 'Tesla', 50, 60, 1500000, 1000);''', language='sql')
 
-            st.header('Updating Existing Data')
+            st.markdown('<p class="font">Updating Existing Data</p>', unsafe_allow_html=True) 
             st.write('Amazon has increased its member and guest cost to 40 and 50 USD, respectively. Please update this in the facilities table.')
             st.code('''UPDATE TABLE facilities 
     SET membercost = 40,
     guestcost = 50
     WHERE name = 'Amazon';''', language='sql')
 
-            st.header('Updating Data Based On The Contents Of Another Row')
+
+            st.markdown('<p class="font">Updating Data Based On The Contents Of Another Row</p>', unsafe_allow_html=True) 
             st.write('Amazon is building a new facility that costs 10 percent less than the facility at Tesla. Please update this in the facilities table.')
             st.code('''UPDATE TABLE facilities 
     SET initialoutlay = 0.90 * (SELECT intialoutlay FROM facilities WHERE name = 'Tesla')
     WHERE name = 'Amazon';''', language='sql')
 
-            st.header('Deleting Existing Data')
+            st.markdown('<p class="font">Deleting Existing Data</p>', unsafe_allow_html=True) 
             st.write('Delete the facilities table.')
             st.code('''DELETE FROM facilities;''', language='sql')
 
-            st.header('Deleting Existing Data Bassed On A Subquery')
+            st.markdown('<p class="font">Deleting Existing Data Bassed On A Subquery</p>', unsafe_allow_html=True) 
             st.write('Delete members who are not enrolled in any facilities.')
             st.code('''DELETE FROM members 
     WHERE memid NOT IN (SELECT memid FROM bookings);''', language='sql')
+
+
+        if choose_sql == "Aggregate Functions":
+            st.markdown(""" <style> .font {
+            font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+            </style> """, unsafe_allow_html=True)
+            st.markdown('<p class="font">Aggregating Data</p>', unsafe_allow_html=True)
+            st.write('Aggregation functions in SQL allows you to collect a set of values to return a single value. For example, MAX(), SUM(), COUNT() and AVG() are aggregate functions.')
+
+
+
+
+        if choose_sql == "Rollups":
+            st.markdown(""" <style> .font {
+            font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+            </style> """, unsafe_allow_html=True)
+            st.markdown('<p class="font">Rollup Functions</p>', unsafe_allow_html=True)
+            st.write('The Rollup function in SQL is an extension of the GROUP BY clause that allows you to include extra rows that represent the subtotals or super-aggregate rows. This function generates multiple grouping sets.')
+            st.subheader('Movies')
+            st.write('''
+| movie_title       | varchar(100) |
+|-------------------|--------------|
+| description_count | integer      |
+| publisheddate     | yyyy-mm-dd   |
+| published_time    | hh:mm:ss     |
+| view_count        | integer      |
+| like_count        | integer      |
+| comment_count     | integer      |           
+''')
+            
+            st.markdown('<p class="font">Aggregating Per Month And Year</p>', unsafe_allow_html=True)
+            st.write('What is the average monthly view count per day per month per year for this Youtube channel.')
+            rollup_code = '''WITH CTE AS(
+        SELECT 
+            movie_title,
+            YEAR(publisheddate) AS years,
+            MONTH(publisheddate) AS months,
+            DAY(publisheddate) AS days,
+            view_count
+        FROM movies
+        )
+        SELECT 
+            years, months, days,
+            IF(GROUPING(years), 'Every year', years) AS year_grouping,
+            IF(GROUPING(months), 'Every month', months) AS month_grouping,
+            IF(GROUPING(days), 'Every day', day) AS day_grouping,
+            SUM(view_count)
+        FROM CTE
+            GROUP BY years,months,days WITH ROLLUP
+            ORDER BY years,months,days;'''
+            st.code(rollup_code, language='sql')
+            st.write('''
+| years | months   | days      | year_grouping | month_grouping | day_grouping | view_count  |
+|-------|----------|-----------|---------------|----------------|--------------|-------------|
+| Null  | Null     | Null      | Every year    | Every month    | Every day    | 35199594996 |
+| 2015  | Null     | Null      | 2015          | Every month    | Every day    | 4021014751  |
+| 2015  | August   | Null      | 2015          | August         | Every day    | 214677925   |
+| 2015  | August   | Friday    | 2015          | August         | Friday       | 52716149    |
+| 2015  | August   | Monday    | 2015          | August         | Monday       | 8796249     |
+| 2015  | August   | Thursday  | 2015          | August         | Thursday     | 15228612    |
+| 2015  | August   | Tuesday   | 2015          | August         | Tuesday      | 135902705   |
+| 2015  | December | Wednesday | 2015          | December       | Wednesday    | 2034210     |
+| 2015  | December | Null      | 2015          | December       | Every day    | 425876935   |        
+''')
+
+
+
+
 
 elif choose == "About Me & Contact":
     col1, col2 = st.columns( [0.8, 0.2])
