@@ -1,5 +1,6 @@
 #from tkinter import HORIZONTAL
 #from turtle import width
+from operator import irshift
 from pyparsing import col
 from streamlit_option_menu import option_menu
 import time
@@ -696,8 +697,17 @@ elif choose == "Archive":
     )
 
     if choose == "Python":
+        st.markdown(""" <style> .font {
+        font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+        </style> """, unsafe_allow_html=True)
+        iris = pd.read_csv('csv_files/iris.csv')
+        col1,col2,col3 = st.columns([1,3,1])
+        with col2:
+            st.subheader('Iris Dataset')
+            st.dataframe(iris)
+        
         choose_py = option_menu(None,["Barplot","Grouped Circular Barplot", "Scatterplot", "Lollipop"],
-                         #icons=['list-nested', 'server','graph-up'],
+                         icons=['bar-chart-line-fill', 'server','graph-up'],
                          styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
@@ -705,10 +715,30 @@ elif choose == "Archive":
         "nav-link-selected": {"background-color": "#ddbea9"},
         }
         )
-    
+        if choose_py == "Barplot":
+            st.markdown('<p class="font">Barplots Using Seaborn</p>', unsafe_allow_html=True)
 
+            bar_code = '''
+            # Import Libraries
+import pandas as pd
+import seaborn as sns
 
+# Color palette
+colors = sns.color_palette("hls", 8)
 
+# Initialize Plot Grid
+ax, fig = plt.subplots(figsize= [15,7])
+
+# Create Plot
+bar_fig = sns.barplot(data = iris, x = 'variety', y = 'petal.length', palette = colors)      
+'''
+
+            st.code(bar_code, language='python')
+
+            colors = sns.color_palette("hls", 8)
+            ax, fig = plt.subplots(figsize= [15,7])
+            bar_fig = sns.barplot(data = iris, x = 'variety', y = 'petal.length', palette = colors)
+            st.pyplot()
 
 
 
@@ -1066,6 +1096,49 @@ FROM table;'''
             </style> """, unsafe_allow_html=True)
             st.markdown('<p class="font">Aggregating Data</p>', unsafe_allow_html=True)
             st.write('Aggregation functions in SQL allows you to collect a set of values to return a single value. For example, MAX(), SUM(), COUNT() and AVG() are aggregate functions.')
+
+
+        if choose_sql == "Date":
+            st.markdown(""" <style> .font {
+            font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+            </style> """, unsafe_allow_html=True)
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.subheader('Members')
+                st.write('''
+    | memid         | integer      |
+    |---------------|--------------|
+    | firstname     | varchar(200) |
+    | surname       | varchar(200) |
+    | address       | varchar(200) |
+    | zipcode       | integer      |
+    | telephone     | varchar(20)  |
+    | recommendedby | integer      |
+    | joindate      | timestamp    |
+                ''')
+            with col2:
+                st.subheader('Bookings')
+                st.write('''
+    | facid     | integer   |
+    |-----------|-----------|
+    | memid     | integer   |
+    | starttime | timestamp |
+    | slots     | integer   |                
+                ''')
+            with col3:
+                st.subheader('Facilities')
+                st.write('''
+| facid              | integer      |
+|--------------------|--------------|
+| name               | varchar(200) |
+| membercost         | float        |
+| guestcost          | float        |
+| initialoutlay      | float        |
+| monthlymaintenance | float        |             
+    ''')
+            st.markdown('<p class="font">Date </p>', unsafe_allow_html=True)
+            
+
 
 
 
