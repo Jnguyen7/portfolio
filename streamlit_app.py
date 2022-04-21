@@ -1,6 +1,8 @@
 #from tkinter import HORIZONTAL
 #from turtle import width
 from operator import irshift
+from statistics import mean
+from turtle import color
 from pyparsing import col
 from streamlit_option_menu import option_menu
 import time
@@ -535,8 +537,8 @@ elif choose == "Full Projects":
             st.image(feature_image1, use_column_width= True)
         with text_col:
             st.markdown(""" <style> .font {
-            font-size:22px ; font-family: 'Black'; color: #FFFFF;} 
-            </style> """, unsafe_allow_html=True)
+        font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+        </style> """, unsafe_allow_html=True)
             st.markdown('<p class="font">Amazons ‘Best’ Sellers </p>', unsafe_allow_html=True)    
             st.markdown("By Joshua Nguyen - Project that webscrapes Amazon's Best Sellers Page. Its main goal is to direct how individual businesses can achieve Amazon's top sellers list.")
             st.markdown("View code on my GitHub Repo: https://github.com/Jnguyen7/Python/blob/main/amazon_best_sellers.ipynb")
@@ -560,9 +562,6 @@ elif choose == "Full Projects":
         with image_col:
             st.image(feature_image1,  use_column_width= True)
         with text_col:
-            st.markdown(""" <style> .font {
-            font-size:22px ; font-family: 'Black'; color: #FFFFF;} 
-            </style> """, unsafe_allow_html=True)
             st.markdown('<p class="font">MovieClips Fandango Data Analysis</p>', unsafe_allow_html=True)    
             st.markdown("By Joshua Nguyen - Project that analyzes MovieClips' Youtube channel. Its main goal seeks to improve viewership for this channel.")
             st.markdown("View code on my GitHub Repo: https://github.com/Jnguyen7/SQL/blob/main/MovieClips.sql")
@@ -587,9 +586,6 @@ elif choose == "Full Projects":
         with image_col:
             st.image(feature_image1,  use_column_width= True)
         with text_col:
-            st.markdown(""" <style> .font {
-            font-size:22px ; font-family: 'Black'; color: #FFFFF;} 
-            </style> """, unsafe_allow_html=True)
             st.markdown('<p class="font">MovieClips Fandango Data Analysis</p>', unsafe_allow_html=True)    
             st.markdown("By Joshua Nguyen - Project that uses API to extract and analyze real time weather data throughout the United States of America. Its main goal is to help meterologists predict natural weather disasters like tornadoes.")
             st.markdown("View code on my GitHub Repo: https://github.com/Jnguyen7/Python/blob/main/weather_forecast_data.ipynb")
@@ -613,9 +609,6 @@ elif choose == "Full Projects":
         with image_col:
             st.image(feature_image1,  use_column_width= True)
         with text_col:
-            st.markdown(""" <style> .font {
-            font-size:22px ; font-family: 'Black'; color: #FFFFF;} 
-            </style> """, unsafe_allow_html=True)
             st.markdown('<p class="font">Flu Vaccinations Data Analysis</p>', unsafe_allow_html=True)    
             st.markdown("By Joshua Nguyen - project that explores the Influenza Vaccination Status in the United States of America Between 2014 to 2021")
             st.markdown("View code on my GitHub Repo: https://github.com/Jnguyen7/SQL/blob/main/Vaccination.sql")
@@ -639,9 +632,6 @@ elif choose == "Full Projects":
         with image_col:
             st.image(feature_image1,  use_column_width= True)
         with text_col:
-            st.markdown(""" <style> .font {
-            font-size:22px ; font-family: 'Black'; color: #FFFFF;} 
-            </style> """, unsafe_allow_html=True)
             st.markdown('<p class="font">Real Estate Data Analysis</p>', unsafe_allow_html=True)    
             st.markdown("By Joshua Nguyen - Project that analyzes real estate market in New York City. Its main goal seeks to create a interactive dashboard that helps potential real estate investors.")
             st.markdown("View code on my GitHub Repo: https://github.com/Jnguyen7/Excel/tree/main")
@@ -664,9 +654,6 @@ elif choose == "Full Projects":
         with image_col:
             st.image(feature_image1,  use_column_width= True)
         with text_col:
-            st.markdown(""" <style> .font {
-            font-size:22px ; font-family: 'Black'; color: #FFFFF;} 
-            </style> """, unsafe_allow_html=True)
             st.markdown('<p class="font">R Documentation</p>', unsafe_allow_html=True)    
             st.markdown("By Joshua Nguyen - This manual contains and provides the fundamental basis of R and RStudio in a rudimentary vernacular for the common layperson. It also archives some of Joshua Nguyen’s projects in R and statistical computation.")
             st.markdown("Tools: R")
@@ -698,7 +685,7 @@ elif choose == "Archive":
 
     if choose == "Python":
         st.markdown(""" <style> .font {
-        font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+        font-size:35px ; font-family: 'Montserrat'; color: #FF9633;} 
         </style> """, unsafe_allow_html=True)
         iris = pd.read_csv('csv_files/iris.csv')
         col1,col2,col3 = st.columns([1,3,1])
@@ -707,7 +694,7 @@ elif choose == "Archive":
             st.dataframe(iris)
         
         choose_py = option_menu(None,["Barplot","Grouped Circular Barplot", "Scatterplot", "Lollipop"],
-                         icons=['bar-chart-line-fill', 'server','graph-up'],
+                         icons=['bar-chart-line-fill', 'server','graph-up', 'sliders'],
                          styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
@@ -723,24 +710,289 @@ elif choose == "Archive":
 import pandas as pd
 import seaborn as sns
 
+# Import dataset
+iris = pd.read_csv('iris.csv')
+
 # Color palette
 colors = sns.color_palette("hls", 8)
 
+# Set Dark Background
+sns.set(style="darkgrid")
+
 # Initialize Plot Grid
-ax, fig = plt.subplots(figsize= [15,7])
+ax, fig = plt.subplots(figsize= [10,7])
 
 # Create Plot
-bar_fig = sns.barplot(data = iris, x = 'variety', y = 'petal.length', palette = colors)      
+bar_fig = sns.barplot(
+    data = iris,
+    x = 'variety',
+    y = 'petal.length',
+    palette = colors,
+    estimator = mean)      
 '''
 
             st.code(bar_code, language='python')
 
             colors = sns.color_palette("hls", 8)
-            ax, fig = plt.subplots(figsize= [15,7])
-            bar_fig = sns.barplot(data = iris, x = 'variety', y = 'petal.length', palette = colors)
+            sns.set(style="darkgrid")
+            ax, fig = plt.subplots(figsize= [10,7])
+            bar_fig = sns.barplot(
+                data = iris,
+                x = 'variety',
+                y = 'petal.length',
+                palette = colors,
+                estimator = mean)
+            st.pyplot()
+
+            st.markdown('<p class="font">Customized Grouped Barplots With Seaborn</p>', unsafe_allow_html=True)
+
+            
+            # Horizontal Group Bar Chart Petal Length Vs Petal Width
+
+            hbar_code = '''
+            # Import Libraries
+import pandas as pd
+import seaborn as sns
+
+# Import dataset
+iris = pd.read_csv('iris.csv')
+
+# Group Values by Mean Values
+grouped_iris = iris.groupby('variety').mean()
+
+# Initialize Plot
+sns.set(style="darkgrid")
+barWidth = 0.3
+
+# Height of Petal Length Bars
+petal_length_bars = grouped_iris['petal.length'].tolist()
+
+# Height of Petal Width Bars
+petal_width_bars = grouped_iris['petal.width'].tolist()
+
+# List of Grouped Variety Names
+petal_variety = grouped_iris.index.tolist()
+
+# The x position of bars
+r1 = np.arange(len(petal_length_bars))
+r2 = [x + barWidth for x in r1]
+
+# Create Petal Length Bars
+plt.bar(r1, 
+    petal_length_bars,
+    width = barWidth,
+    color = 'blue',
+    edgecolor = 'black',
+    capsize=7,
+    label='petal length',
+    alpha = 0.4)
+
+# Create Petal Width Bars
+plt.bar(r2,
+    petal_width_bars,
+    width = barWidth,
+    color = 'cyan',
+    edgecolor = 'black',
+    capsize=7,
+    label='petal width',
+    alpha = 0.4)
+
+# Plot Layout
+plt.xticks([r + barWidth for r in range(len(petal_length_bars))], petal_variety)
+plt.ylabel('height')
+plt.title('Mean Size Comparison Between Petal Length Vs Petal Width Between Iris Species')
+plt.legend()
+
+# Show Plot
+plt.show()   
+'''
+            st.code(hbar_code, language='python')
+
+            grouped_iris = iris.groupby('variety').mean()
+            sns.set(style="darkgrid")
+            barWidth = 0.3
+
+            # height of petal length bars
+            petal_length_bars = grouped_iris['petal.length'].tolist()
+
+            # height of petal width bars
+            petal_width_bars = grouped_iris['petal.width'].tolist()
+
+            # List of Grouped Variety
+            petal_variety = grouped_iris.index.tolist()
+
+
+            # The x position of bars
+            r1 = np.arange(len(petal_length_bars))
+            r2 = [x + barWidth for x in r1]
+
+            # Create blue bars
+            plt.bar(r1, petal_length_bars, width = barWidth, color = 'blue', edgecolor = 'black', capsize=7, label='petal length', alpha = 0.4)
+
+            # Create cyan bars
+            plt.bar(r2, petal_width_bars, width = barWidth, color = 'cyan', edgecolor = 'black', capsize=7, label='petal width', alpha = 0.4)
+
+            # general layout
+            plt.xticks([r + barWidth for r in range(len(petal_length_bars))], petal_variety)
+            plt.ylabel('height')
+            plt.title('Mean Size Comparison Between Petal Length Vs Petal Width Between Iris Species')
+            plt.legend()
+            
+            # Show graphic
             st.pyplot()
 
 
+
+
+
+        if choose_py == 'Scatterplot':
+            st.markdown('<p class="font">Scatterplots Using Seaborn</p>', unsafe_allow_html=True)
+            scatter = '''
+            # Import Libraries
+import pandas as pd
+import seaborn as sns
+
+# Import dataset
+texas_data = pd.read_csv('csv_files/texas3.csv')
+
+# Scatterplot
+sns.set(style="white", color_codes=True)
+sns.jointplot(x=texas_data["y"],
+    y=-texas_data["x"],
+    kind='scatter',
+    s=200,
+    color='m',
+    edgecolor="skyblue",
+    linewidth=2)
+
+plt.show()
+
+# Hex Plot
+sns.set(style="white", color_codes=True)
+sns.jointplot(x=texas_data["y"],
+    y=-texas_data["x"],
+    kind='hex',
+    marginal_kws=dict(bins=30, fill=True))
+
+plt.show()
+
+# Kernal Density Estimation
+sns.set(style="white", color_codes=True)
+sns.jointplot(x=texas_data["y"],
+    y=-texas_data["x"],
+    kind='kde',
+    color="skyblue")
+
+plt.show()
+'''
+            st.code(scatter, language='python')
+
+            # ----- Texas Scatter Plot ----- #      
+            texas_data = pd.read_csv('csv_files/texas3.csv')
+            home_col1, home_col2, home_col3 = st.columns(3)
+            with home_col1:
+                st.subheader('Scatterplot')
+                scatter_plot(texas_data, 'x', 'y')
+            with home_col2:
+                st.subheader('Hex Plot')
+                hex_plot(texas_data, 'x', 'y')
+            with home_col3:
+                st.subheader('KDE Plot')
+                kde_plot(texas_data, 'x', 'y')
+                        
+
+
+        if choose_py == "Lollipop":
+            st.markdown('<p class="font">Lollipop Plots Using Seaborn</p>', unsafe_allow_html=True)
+
+            bar_code = '''
+            # Import Libraries
+import pandas as pd
+import seaborn as sns
+
+# Import dataset
+iris = pd.read_csv('iris.csv')
+
+# Aggregate by Variety and Fidning range of Dataframe
+top_petal_length = iris.groupby(by=['variety']).mean()
+my_range = range(0,len(top_petal_length))
+
+# Initialize Plot
+fig = plt.figure(figsize=(10,7))
+
+# Creating Stems
+plt.stem(top_petal_length['petal.length'])
+plt.xticks(my_range, top_petal_length.index)
+
+# Label Plot
+plt.xlabel('Variety', fontsize=20)
+plt.ylabel('Mean Petal Length',fontsize=20)
+plt.title("Average Petal Length By Iris Variety", fontsize=20, x=0.5,y=1.02)   
+'''
+
+
+            st.code(bar_code, language='python')
+
+            
+
+            top_petal_length = iris.groupby(by=['variety']).mean()
+            my_range = range(0,len(top_petal_length))
+
+            fig = plt.figure(figsize=(5,5))
+
+            plt.stem(top_petal_length['petal.length'])
+            plt.xticks(my_range, top_petal_length.index)
+
+            plt.xlabel('Variety', fontsize=20)
+            plt.ylabel('Mean Petal Length',fontsize=20)
+            plt.title("Average Petal Length By Iris Variety", fontsize=20, x=0.5,y=1.02)
+            st.pyplot()
+
+            st.markdown('<p class="font">Lollipop Difference Plots With Seaborn</p>', unsafe_allow_html=True)
+
+            bar_code1 = '''
+            # Import Libraries
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Import dataset
+iris = pd.read_csv('iris.csv')
+
+# Aggregate by Variety and Fidning range of Dataframe
+mean_iris = iris.groupby(by=['variety']).mean()
+my_range = range(0,len(mean_iris))
+
+# Initialize Plot
+fig = plt.figure(figsize=(10,7))
+
+# Creating Stems
+plt.hlines(y=my_range, xmin=top_petal_length['petal.length'], xmax=top_petal_length['sepal.width'], color='grey', alpha=0.4)
+plt.scatter(top_petal_length['petal.length'], my_range, color='skyblue', alpha=1, label='Petal Length')
+plt.scatter(top_petal_length['sepal.width'], my_range, color='green', alpha=0.4 , label='Sepal Length')
+plt.legend()
+
+# Label Plot
+plt.yticks(my_range, top_petal_length.index)
+plt.title("Mean Difference of Sepal Length Compared to Petal Length In Iris Dataset", loc='left')
+plt.xlabel('Length')
+plt.ylabel('Variety')
+'''
+
+
+            st.code(bar_code1, language='python')
+            fig1 = plt.figure(figsize=(5,5))
+            plt.hlines(y=my_range, xmin=top_petal_length['petal.length'], xmax=top_petal_length['sepal.width'], color='grey', alpha=0.4)
+            plt.scatter(top_petal_length['petal.length'], my_range, color='skyblue', alpha=1, label='Petal Length')
+            plt.scatter(top_petal_length['sepal.width'], my_range, color='green', alpha=0.4 , label='Sepal Length')
+            plt.legend()
+
+            plt.yticks(my_range, top_petal_length.index)
+            plt.title("Mean Difference of Sepal Length Compared to Petal Length In Iris Dataset", loc='left')
+            plt.xlabel('Length')
+            plt.ylabel('Variety')
+
+            st.pyplot()
 
 
 
