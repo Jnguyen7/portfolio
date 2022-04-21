@@ -2,7 +2,7 @@
 #from turtle import width
 from operator import irshift
 from statistics import mean
-from turtle import color
+#from turtle import color
 from pyparsing import col
 from streamlit_option_menu import option_menu
 import time
