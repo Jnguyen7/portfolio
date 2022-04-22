@@ -693,8 +693,8 @@ elif choose == "Archive":
             st.subheader('Iris Dataset')
             st.dataframe(iris)
         
-        choose_py = option_menu(None,["Barplot","Grouped Circular Barplot", "Scatterplot", "Lollipop"],
-                         icons=['bar-chart-line-fill', 'server','graph-up', 'sliders'],
+        choose_py = option_menu(None,["Barplot","Grouped Circular Barplot", "Scatterplot", "Lollipop", "Radar Plot", "Pie Plot", "Tree Map"],
+                         icons=['bar-chart-line-fill', 'pie-chart','graph-up', 'sliders', 'bullseye', 'pie-chart-fill', 'tree-fill'],
                          styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
@@ -841,8 +841,323 @@ plt.show()
             # Show graphic
             st.pyplot()
 
+        if choose_py == "Radar Plot":
+            st.markdown('<p class="font">Radar Plots Using Seaborn</p>', unsafe_allow_html=True)
 
+            radarplot = '''
+            # Import Libraries
+import pandas as pd
+import seaborn as sns
+from matplotlib.lines import Line2D
 
+# Import dataset
+texas_data = pd.read_csv('csv_files/texas3.csv')
+
+# Create Function to Rescale Numeric Variables
+def rescale(x):
+    return (x-np.min(x))/np.ptp(x)
+
+# Group By Class
+iris_radar = (
+    iris.groupby('variety').agg(
+        avg_petal_length = ('petal.length', np.mean),
+        avg_petal_width = ('petal.width', np.mean),
+        avg_sepal_length = ('sepal.length', np.mean),
+        avg_sepal_width = ('sepal.width', np.mean)
+    )
+    .apply(lambda x: rescale(x))
+    .reset_index()
+)
+'''
+            radar_plot = '''
+            # Background Colors
+BG_WHITE = "#fbf9f4"
+BLUE = "#2a475e"
+GREY70 = "#b3b3b3"
+GREY_LIGHT = "#f2efe8"
+COLORS = ["#FF5A5F", "#FFB400", "#007A87"]
+
+# Creating List of Iris Species
+SPECIES = iris_radar["variety"].values.tolist()
+
+# Creating List of Iris Dimensions, i.e., petal width, length and sepal length and width
+VARIABLES = iris_radar.columns.tolist()[1:]
+VARIABLES_N = len(VARIABLES)
+
+# Plot Angles
+ANGLES = [n / VARIABLES_N * 2 * np.pi for n in range(VARIABLES_N)]
+ANGLES += ANGLES[:1]
+
+# Tick Labels
+X_VERTICAL_TICK_PADDING = 5
+X_HORIZONTAL_TICK_PADDING = 50    
+
+# Angle values going from 0 to 2*pi
+HANGLES = np.linspace(0, 2 * np.pi)
+
+# Plot Axis
+H0 = np.zeros(len(HANGLES))
+H1 = np.ones(len(HANGLES)) * 0.5
+H2 = np.ones(len(HANGLES))
+
+# Initialize Plot
+fig = plt.figure(figsize=(14, 10))
+ax = fig.add_subplot(111, polar=True)
+
+fig.patch.set_facecolor(BG_WHITE)
+ax.set_facecolor(BG_WHITE)
+
+# Rotate Degrees on Top
+ax.set_theta_offset(np.pi / 2)
+ax.set_theta_direction(-1)
+
+# Setting Lower Limit to Reduce Gap
+# for values that are 0 (the minimums)
+ax.set_ylim(-0.1, 1.05)
+
+# Plot Lines and Dots
+for idx, species in enumerate(SPECIES):
+    values = iris_radar.iloc[idx].drop("variety").values.tolist()
+    values += values[:1]
+    ax.plot(ANGLES, values, c=COLORS[idx], linewidth=4, label=species)
+    ax.scatter(ANGLES, values, s=160, c=COLORS[idx], zorder=10)
+
+# Setting Values For Angular Axis
+ax.set_xticks(ANGLES[:-1])
+ax.set_xticklabels(VARIABLES, size=14)
+
+# Removing Lines For Radial Axis
+ax.set_yticks([])
+ax.yaxis.grid(False)
+ax.xaxis.grid(False)
+
+# Removing Spines
+ax.spines["start"].set_color("none")
+ax.spines["polar"].set_color("none")
+
+# Adding Lines For Custom Lines At Y-Axis
+ax.plot(HANGLES, H0, ls=(0, (6, 6)), c=GREY70)
+ax.plot(HANGLES, H1, ls=(0, (6, 6)), c=COLORS[2])
+ax.plot(HANGLES, H2, ls=(0, (6, 6)), c=GREY70)
+
+# Fill Circle With Radius 1
+ax.fill(HANGLES, H2, GREY_LIGHT)
+
+# Creating Custom Guide For Angular Axis
+ax.plot([0, 0], [0, 1], lw=2, c=GREY70)
+ax.plot([np.pi, np.pi], [0, 1], lw=2, c=GREY70)
+ax.plot([np.pi / 2, np.pi / 2], [0, 1], lw=2, c=GREY70)
+ax.plot([-np.pi / 2, -np.pi / 2], [0, 1], lw=2, c=GREY70)
+
+# Adding Levels, Values of Radial Axis
+PAD = 0.05
+ax.text(-0.4, 0 + PAD, "0%", size=16, fontname="Roboto")
+ax.text(-0.4, 0.5 + PAD, "50%", size=16, fontname="Roboto")
+ax.text(-0.4, 1 + PAD, "100%", size=16, fontname="Roboto")
+ax.fill(ANGLES, values, 'b', alpha=0.1)
+
+handles = [
+    Line2D(
+        [], [], 
+        c=color, 
+        lw=3, 
+        marker="o", 
+        markersize=8, 
+        label=species
+    )
+    for species, color in zip(SPECIES, COLORS)
+]
+
+legend = ax.legend(
+    handles=handles,
+    loc=(1, 0),       # bottom-right
+    labelspacing=1.5, # add space between labels
+    frameon=False     # don't put a frame
+)
+
+# Plot Text 
+for text in legend.get_texts():
+    text.set_fontname("Sans Serif") 
+    text.set_fontsize(16) 
+
+# Tick Label Positions
+XTICKS = ax.xaxis.get_major_ticks()
+for tick in XTICKS[0::2]:
+    tick.set_pad(X_VERTICAL_TICK_PADDING)
+    
+for tick in XTICKS[1::2]:
+    tick.set_pad(X_HORIZONTAL_TICK_PADDING)
+
+# Plot Title
+fig.suptitle(
+    "Radar Plot of Iris Species",
+    x = 0.1,
+    y = 1,
+    ha="left",
+    fontsize=32,
+    fontname="Roboto",
+    color=BLUE,
+    weight="bold",    
+)
+
+# Show Plot
+fig.show()
+'''
+            
+            st.code(radarplot, language='python')
+            st.code(radar_plot, language='python')
+
+            def rescale(x):
+                return (x-np.min(x))/np.ptp(x)
+
+            iris_radar = (
+                iris.groupby('variety').agg(
+                    avg_petal_length = ('petal.length', np.mean),
+                    avg_petal_width = ('petal.width', np.mean),
+                    avg_sepal_length = ('sepal.length', np.mean),
+                    avg_sepal_width = ('sepal.width', np.mean)
+                )
+                .apply(lambda x: rescale(x))
+                .reset_index()
+            )
+
+            BG_WHITE = "#fbf9f4"
+            BLUE = "#2a475e"
+            GREY70 = "#b3b3b3"
+            GREY_LIGHT = "#f2efe8"
+            COLORS = ["#FF5A5F", "#FFB400", "#007A87"]
+
+            # The three species of iris
+            SPECIES = iris_radar["variety"].values.tolist()
+
+            # The four variables in the plot
+            VARIABLES = iris_radar.columns.tolist()[1:]
+            VARIABLES_N = len(VARIABLES)
+
+            # The angles at which the values of the numeric variables are placed
+            ANGLES = [n / VARIABLES_N * 2 * np.pi for n in range(VARIABLES_N)]
+            ANGLES += ANGLES[:1]
+
+            # Padding used to customize the location of the tick labels
+            X_VERTICAL_TICK_PADDING = 5
+            X_HORIZONTAL_TICK_PADDING = 50    
+
+            # Angle values going from 0 to 2*pi
+            HANGLES = np.linspace(0, 2 * np.pi)
+
+            # Used for the equivalent of horizontal lines in cartesian coordinates plots 
+            # The last one is also used to add a fill which acts a background color.
+            H0 = np.zeros(len(HANGLES))
+            H1 = np.ones(len(HANGLES)) * 0.5
+            H2 = np.ones(len(HANGLES))
+
+            # Initialize layout ----------------------------------------------
+            fig = plt.figure(figsize=(14, 10))
+            ax = fig.add_subplot(111, polar=True)
+
+            fig.patch.set_facecolor(BG_WHITE)
+            ax.set_facecolor(BG_WHITE)
+
+            # Rotate the "" 0 degrees on top. 
+            # There it where the first variable, avg_bill_length, will go.
+            ax.set_theta_offset(np.pi / 2)
+            ax.set_theta_direction(-1)
+
+            # Setting lower limit to negative value reduces overlap
+            # for values that are 0 (the minimums)
+            ax.set_ylim(-0.1, 1.05)
+
+            # Plot lines and dots --------------------------------------------
+            for idx, species in enumerate(SPECIES):
+                values = iris_radar.iloc[idx].drop("variety").values.tolist()
+                values += values[:1]
+                ax.plot(ANGLES, values, c=COLORS[idx], linewidth=4, label=species)
+                ax.scatter(ANGLES, values, s=160, c=COLORS[idx], zorder=10)
+
+            # Set values for the angular axis (x)
+            ax.set_xticks(ANGLES[:-1])
+            ax.set_xticklabels(VARIABLES, size=14)
+
+            # Remove lines for radial axis (y)
+            ax.set_yticks([])
+            ax.yaxis.grid(False)
+            ax.xaxis.grid(False)
+
+            # Remove spines
+            ax.spines["start"].set_color("none")
+            ax.spines["polar"].set_color("none")
+
+            # Add custom lines for radial axis (y) at 0, 0.5 and 1.
+            ax.plot(HANGLES, H0, ls=(0, (6, 6)), c=GREY70)
+            ax.plot(HANGLES, H1, ls=(0, (6, 6)), c=COLORS[2])
+            ax.plot(HANGLES, H2, ls=(0, (6, 6)), c=GREY70)
+
+            # Now fill the area of the circle with radius 1.
+            # This create the effect of gray background.
+            ax.fill(HANGLES, H2, GREY_LIGHT)
+
+            # Custom guides for angular axis (x).
+            # These four lines do not cross the y = 0 value, so they go from 
+            # the innermost circle, to the outermost circle with radius 1.
+            ax.plot([0, 0], [0, 1], lw=2, c=GREY70)
+            ax.plot([np.pi, np.pi], [0, 1], lw=2, c=GREY70)
+            ax.plot([np.pi / 2, np.pi / 2], [0, 1], lw=2, c=GREY70)
+            ax.plot([-np.pi / 2, -np.pi / 2], [0, 1], lw=2, c=GREY70)
+
+            # Add levels -----------------------------------------------------
+            # These labels indicate the values of the radial axis
+            PAD = 0.05
+            ax.text(-0.4, 0 + PAD, "0", size=16, fontname="Roboto")
+            ax.text(-0.4, 0.5 + PAD, "0.5", size=16, fontname="Roboto")
+            ax.text(-0.4, 1 + PAD, "1", size=16, fontname="Roboto")
+            ax.fill(ANGLES, values, 'b', alpha=0.1)
+
+            from matplotlib.lines import Line2D
+            handles = [
+                Line2D(
+                    [], [], 
+                    c=color, 
+                    lw=3, 
+                    marker="o", 
+                    markersize=8, 
+                    label=species
+                )
+                for species, color in zip(SPECIES, COLORS)
+            ]
+
+            legend = ax.legend(
+                handles=handles,
+                loc=(1, 0),       # bottom-right
+                labelspacing=1.5, # add space between labels
+                frameon=False     # don't put a frame
+            )
+
+            # Iterate through text elements and change their properties
+            for text in legend.get_texts():
+                text.set_fontname("Sans Serif") # Change default font 
+                text.set_fontsize(16)       # Change default font size
+
+            # Adjust tick label positions ------------------------------------
+            XTICKS = ax.xaxis.get_major_ticks()
+            for tick in XTICKS[0::2]:
+                tick.set_pad(X_VERTICAL_TICK_PADDING)
+                
+            for tick in XTICKS[1::2]:
+                tick.set_pad(X_HORIZONTAL_TICK_PADDING)
+
+            # Add title ------------------------------------------------------
+            fig.suptitle(
+                "Radar Plot of Iris Species",
+                x = 0.1,
+                y = 1,
+                ha="left",
+                fontsize=32,
+                fontname="Roboto",
+                color=BLUE,
+                weight="bold",    
+            )
+
+            st.pyplot()
 
 
         if choose_py == 'Scatterplot':
@@ -1006,7 +1321,7 @@ plt.ylabel('Variety')
 
     if choose == "SQL":
         choose_sql = option_menu(None,["Important SQl Functions", "Recursion/Looping in SQL", "Case Statements", 'Aggregate Functions','Rollups','Ranking Functions', 'Analytic Functions', 'Modifying Data', 'Date', 'Strings'],
-                            icons=['list', 'list', 'list', 'list', 'list','list', 'list', 'list', 'list', 'list'],
+                            icons=['blank', 'blank', 'blank', 'blank', 'blank','blank', 'blank', 'blank', 'blank', 'blank'],
                             styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
