@@ -671,8 +671,8 @@ elif choose == "Full Projects":
 
 
 elif choose == "Archive":
-    choose = option_menu(None,["Python", "SQL", "R"],
-                         icons=['list-nested', 'server','graph-up'],
+    choose = option_menu(None,["Python", "SQL", "Machine Learning"],
+                         icons=['list-nested', 'server','gear-wide-connected'],
                          orientation = 'horizontal',
                          styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
@@ -1894,8 +1894,93 @@ FROM table;'''
 ''')
 
 
+    if choose == "Machine Learning":
+        choose_ML = option_menu(None,["Basic Terminology","Linear Regression", "Logistic Regression", "Decision Tree", "Support Vector Machine (SVM)", "Naive Bayes", "K-Nearest Neightbors (KNN)", "K-Means", "Random Forest", "Dimension Redcution Algorithms", "Gradient Boosting & AdaBoost" ],
+                            icons=['journal-richtext','graph-up', 'blank', 'blank', 'blank', 'blank','blank', 'blank', 'blank', 'blank', 'blank'],
+                            styles={
+        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#ddbea9"},
+        },
+        #orientation = 'horizontal'
+        )
+        st.markdown(""" <style> .font {
+            font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+            </style> """, unsafe_allow_html=True)
+
+        if choose_ML == "Basic Terminology":
+            st.markdown('<p class="font">Basic Terminology</p>', unsafe_allow_html=True)
+            st.header('Training Sets')
+            st.write('Training a model is the process of iteratively improving prediction equations by looping the dataset multiple times. Each iteration, we will update the weight and bias values in the direction indicated by the slop of the gradient. Training is completed when either we reach an acceptable error threshold or when subsequent training iterations fail to reduce cost.')
+
+            st.header('Model Evaluation')
+            st.write('If the model is working, then we need to see the cost function decrease after every iteration.')
 
 
+
+
+
+            
+        if choose_ML == "Linear Regression":
+            st.markdown('<p class="font">Linear Regression</p>', unsafe_allow_html=True)
+            st.warning("Linear model that assumes a linear relationship between the input variables (x) and the single output variable (y). That is, y can be calculated from a linear combination of the input variables, x.")  
+            
+            cols1, cols2 = st.columns(2)
+            with cols1:
+                st.header("Python")
+
+                python_LR= '''
+# Import Libraries 
+from sklearn import linear_model
+
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+##### Note that values must be numerical and numpy arrays #####
+X_train = input_variables_values_training_data
+X_test = input_variables_values_tests_data
+y_train = target_variables_values_training_data
+
+# Create Linear Regression Object
+linear = linear_model.LinearRegression()
+
+# Training Model With Training Sets
+linear.fit(X_train, y_train)
+
+# Check Score
+linear.score(X_train, y_train)
+
+# Equation Coefficient and Intercept
+print('Coefficient:', linear.coef_)
+print('Intercept:', linear.intercept_)
+
+# Predict Output
+predicted = linear.predict(X_test)
+'''
+                st.code(python_LR, language='python')
+
+
+            with cols2:
+                st.header("R")
+                R_LR= '''
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+##### Note that values must be numerical and numpy arrays #####
+X_train <- input_variables_values_training_data
+X_test <- input_variables_values_tests_data
+y_train <- target_variables_values_training_data
+x <- cbind(X_train, y_train)
+
+# Training Model With Training Sets
+linear <- lm(y_train ~ ., data = x)
+
+# Check Score
+summary(linear)
+
+# Predict Output
+predicted = predict(linear, x_test)
+'''
+                st.code(R_LR, language='R')
 
 elif choose == "About Me & Contact":
     col1, col2 = st.columns( [0.8, 0.2])
@@ -1918,9 +2003,7 @@ elif choose == 'Find A GPU':
     st.markdown("##")
 
     # ----- BACKGROUND ----- # 
-    col1, col2, col3 = st.columns([0.5,4,0.5])
-    with col2:
-        main_gif = st.image('images/main.gif', use_column_width=True)
+    main_gif = st.image('images/main.gif', use_column_width=True)
 
     # ----- SIDE BAR ----- # 
     st.sidebar.header("Filters")
