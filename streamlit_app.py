@@ -15,7 +15,7 @@ import re
 from tracemalloc import start
 from unicodedata import name
 from bs4 import BeautifulSoup
-from numpy import choose
+from numpy import choose, pad
 from prometheus_client import Metric
 import requests
 from urllib.request import urlopen
@@ -30,7 +30,6 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-
 
 
 # website documentation: https://medium.com/codex/create-a-multi-page-app-with-the-new-streamlit-option-menu-component-3e3edaf7e7ad
@@ -1215,7 +1214,7 @@ plt.show()
                 st.subheader('KDE Plot')
                 kde_plot(texas_data, 'x', 'y')
                         
-
+        
 
         if choose_py == "Lollipop":
             st.markdown('<p class="font">Lollipop Plots Using Seaborn</p>', unsafe_allow_html=True)
@@ -1311,8 +1310,139 @@ plt.ylabel('Variety')
 
 
 
+        if choose_py == "Pie Plot":
+            st.markdown('<p class="font">Pie Plots Using Seaborn</p>', unsafe_allow_html=True)
+
+            pie_code = '''
+            # Import Libraries
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Import dataset
+iris = pd.read_csv('iris.csv')
+
+# Aggregate by Variety 
+iris_pie = iris.groupby(by = 'variety').agg(avg_petal_length = ('petal.length', np.mean))
+
+# Creating Lists of Index and Values
+iris_mean_petal_length = iris_pie['avg_petal_length'].to_list()
+pie_labels = iris_pie.index.to_list()
+
+# Creating Explosion List For Expanding Largest Pie Plot
+pie_label_size = len(pie_labels)
+explode_list = []
+for i in range(0, pie_label_size):
+    explode_list.append(0.02)
+max_value = max(iris_mean_petal_length)
+max_value_index = iris_mean_petal_length.index(max_value)
+explode_list[max_value_index] = 0.04
+
+# Creating Plot
+colors = sns.color_palette("hls",8)
+plt.pie(
+    iris_mean_petal_length, 
+    labels = pie_labels,
+    colors= colors,
+    autopct= '%0.0f%%', 
+    explode= explode_list,
+    shadow = False,
+    startangle= 90,
+    textprops= {'color': 'Black', 'fontsize':50},
+    wedgeprops = {'linewidth':6},
+    center = (0.1,0.1),
+    rotatelabels= True
+)
+plt.rcParams["figure.figsize"] = [25,25]
+plt.show()
+'''
 
 
+            st.code(pie_code, language='python')
+
+            iris_pie = iris.groupby(by = 'variety').agg(avg_petal_length = ('petal.length', np.mean))
+            iris_mean_petal_length = iris_pie['avg_petal_length'].to_list()
+            pie_labels = iris_pie.index.to_list()
+
+            colors = sns.color_palette("hls",8)
+
+            pie_label_size = len(pie_labels)
+
+            explode_list = []
+            for i in range(0, pie_label_size):
+                explode_list.append(0.02)
+
+            max_value = max(iris_mean_petal_length)
+            max_value_index = iris_mean_petal_length.index(max_value)
+            explode_list[max_value_index] = 0.04
+
+            plt.pie(
+                iris_mean_petal_length, 
+                labels = pie_labels,
+                colors= colors,
+                autopct= '%0.0f%%', 
+                explode= explode_list,
+                shadow = False,
+                startangle= 90,
+                textprops= {'color': 'Black', 'fontsize':25},
+                wedgeprops = {'linewidth':6},
+                center = (0.1,0.1),
+                rotatelabels= True
+            )
+
+            plt.rcParams["figure.figsize"] = [25,25]
+            st.pyplot()
+
+        if choose_py == "Tree Map":
+            st.markdown('<p class="font">Tree Maps Using Seaborn</p>', unsafe_allow_html=True)
+            tree_code = '''
+            # Import Libraries
+import pandas as pd
+import seaborn as sns
+import matplotlib
+import squarify
+
+# Import dataset
+iris = pd.read_csv('iris.csv')
+
+# Aggregate by Variety 
+iris_tree = iris.groupby(by = 'variety').agg(avg_petal_length = ('petal.length', np.mean))
+
+# Creating Color Scheme Based On Values
+color_map = matplotlib.cm.Blues
+min_value = min(iris_tree['avg_petal_length'])
+max_value = max(iris_tree['avg_petal_length'])
+norm = matplotlib.colors.Normalize(vmin = min_value, vmax= max_value)
+colors = [color_map(norm(value)) for value in iris_tree['avg_petal_length']]
+
+squarify.plot(
+    sizes=iris_tree['avg_petal_length'],
+    label= iris_tree.index,
+    alpha = 0.8,
+    color = colors,
+    pad = True,
+    text_kwargs={'fontsize':25, 'fontname':"Times New Roman Bold",'weight':'bold'})
+plt.axis('off')
+plt.show()
+'''
+
+
+            st.code(tree_code, language='python')
+
+
+            import matplotlib
+            import squarify
+            iris_pie = iris.groupby(by = 'variety').agg(avg_petal_length = ('petal.length', np.mean))
+            # color palette
+            color_map = matplotlib.cm.Blues
+            min_value = min(iris_pie['avg_petal_length'])
+            max_value = max(iris_pie['avg_petal_length'])
+            norm = matplotlib.colors.Normalize(vmin = min_value, vmax= max_value)
+            colors = [color_map(norm(value)) for value in iris_pie['avg_petal_length']]
+
+            squarify.plot(sizes=iris_pie['avg_petal_length'], label= iris_pie.index, alpha = 0.8, color = colors, pad = True, text_kwargs={'fontsize':25, 'fontname':"Times New Roman Bold",'weight':'bold'})
+            plt.axis('off')
+            st.pyplot()
 
 
 
