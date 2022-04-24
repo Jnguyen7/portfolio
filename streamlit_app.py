@@ -1896,7 +1896,7 @@ FROM table;'''
 
     if choose == "Machine Learning":
         choose_ML = option_menu(None,["Basic Terminology","Linear Regression", "Logistic Regression", "Decision Tree", "Support Vector Machine (SVM)", "Naive Bayes", "K-Nearest Neightbors (KNN)", "K-Means", "Random Forest", "Dimension Redcution Algorithms", "Gradient Boosting & AdaBoost" ],
-                            icons=['journal-richtext','graph-up', 'blank', 'blank', 'blank', 'blank','blank', 'blank', 'blank', 'blank', 'blank'],
+                            icons=['journal-richtext','graph-up-arrow', 'graph-up-arrow', 'blank', 'blank', 'blank','blank', 'blank', 'blank', 'blank', 'blank'],
                             styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
@@ -1914,9 +1914,28 @@ FROM table;'''
             st.header('Training Sets')
             st.write('Training a model is the process of iteratively improving prediction equations by looping the dataset multiple times. Each iteration, we will update the weight and bias values in the direction indicated by the slop of the gradient. Training is completed when either we reach an acceptable error threshold or when subsequent training iterations fail to reduce cost.')
 
+            st.header('Cost Function')
+            st.write('The cost function figures out the best possible values for the slope and y-intercept in a linear regresional analysis. We choose the best slope and intercept points by minimizing the error between the predicted and actual values. In order to minimize the error, we take the difference between the predicted values and the ground truth. By squaring the error difference and summing it over all data points and dividing that by the total number of data points, we will obtain the average squared error over all data points. This cost function is known as the Mean Square Error (MSE) function.')
+            st.latex(r'''
+MSE = \frac{1}{n} \sum_{i=1}^{n} (Y_i - y_i)^2
+
+''')
+            st.latex(r'''
+\textrm{n = number of data points}\\
+Y_i \textrm{= observed values}\\
+y_i \textrm{= predicted values}
+''')
+            st.header('Gradient Descent')
+            st.write('Gradient descent updates the slope and y-intercept values to reduce the cost of the MSE function. For example, we will start with an initial slope and y-intercept value, and we change these values iteratively to reduce the cost. The number of steps we take in the gradient descent algorithm is called the learning rate which decides how fast the algorithm converges to the minima. Of note, taking smaller steps in the descent is accurate however it will be costly. Taking larger steps in the descent will be less costly but at the expense of its accuracy in converging to the minima.')
+
             st.header('Model Evaluation')
             st.write('If the model is working, then we need to see the cost function decrease after every iteration.')
 
+            st.header('Prediction')
+            st.write('Prediction refers to the output of an algorithm after it has been trained on a historical dataset and applied to new data when forcasting the liklihood of a particular outcome.')
+            
+            st.header('Classification')
+            st.write('Classification refers to the output of an algorithm that is categorical.')
 
 
 
@@ -1978,9 +1997,86 @@ linear <- lm(y_train ~ ., data = x)
 summary(linear)
 
 # Predict Output
-predicted = predict(linear, x_test)
+predicted = predict(linear, X_test)
 '''
                 st.code(R_LR, language='R')
+
+
+        if choose_ML == "Logistic Regression":
+            st.markdown('<p class="font">Logistic Regression</p>', unsafe_allow_html=True)
+            st.warning('Logistic Regression models the probability of a discrete outcome given an input variable by having the log-odds for the event be a linear combination of one ore more independent variables. The most common logistic regression models a binary outcome. For example, something that can take two such as true/false, yes/no, male/female, ect.')
+            cols1, cols2 = st.columns(2)
+            with cols1:
+                st.header("Python")
+
+                python_LR= '''
+# Import Libraries 
+from sklearn.linear_model import LogisticRegression
+
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+##### Note that values must be numerical and numpy arrays #####
+X_train = input_variables_values_training_data
+X_test = input_variables_values_tests_data
+y_train = target_variables_values_training_data
+
+# Create Logistic Regression Object
+log_model = LogisticRegression()
+
+# Training Model With Training Sets
+log_model.fit(X_train, y_train)
+
+# Check Score
+log_model.score(X_train, y_train)
+
+# Equation Coefficient and Intercept
+print('Coefficient:', log_model.coef_)
+print('Intercept:', log_model.intercept_)
+
+# Predict Output
+predicted = log_model.predict(X_test)
+'''
+                st.code(python_LR, language='python')
+
+
+            with cols2:
+                st.header("R")
+                R_LR= '''
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+##### Note that values must be numerical and numpy arrays #####
+X_train <- input_variables_values_training_data
+X_test <- input_variables_values_tests_data
+y_train <- target_variables_values_training_data
+x <- cbind(X_train, y_train)
+
+# Training Model With Training Sets
+log_model <- lm(y_train ~ ., data = x, family = 'binomial')
+
+# Check Score
+summary(log_model)
+
+# Predict Output
+predicted = predict(log_model, X_test)
+'''
+                st.code(R_LR, language='R')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 elif choose == "About Me & Contact":
     col1, col2 = st.columns( [0.8, 0.2])
