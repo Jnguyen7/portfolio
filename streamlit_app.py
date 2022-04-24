@@ -243,7 +243,7 @@ def pie_chart(df):
 
     max_value = max(pie_data)
     max_value_index = pie_data.index(max_value)
-    explode_list[max_value_index] = 0.03
+    explode_list[max_value_index] = 0.1
 
     pie_explode = explode_list
 
@@ -258,7 +258,7 @@ def pie_chart(df):
     gif_runner.empty()
 
 def bar_chart(df):
-    top_five_price = df.sort_values(by='product_price', ascending=False).nlargest(5, 'product_price')
+    top_five_price = df.sort_values(by='product_price', ascending=False).nlargest(5, 'product_price').round(2)
 
     colors = sns.color_palette("hls",8)
     #ax, fig = plt.subplots(figsize=[15,7])
@@ -2116,14 +2116,14 @@ elif choose == 'Find A GPU':
     # ----- Getting Pandas Dataframe and Display Results ------ #
     if start_execution or st.session_state.load_state:
         st.session_state.load_state = True
-        with col2:
-            main_gif.empty()
-            gif_runner = st.image('images/processing.gif')
-            st.session_state['data_frame'] = get_data(dropdown)
-            data_frame = st.session_state['data_frame']
-            data_frame['product_price'] = data_frame['product_price'].astype(float)
-            data_frame['product_inventory_count'] = data_frame['product_inventory_count'].astype(int) 
-            gif_runner.empty()   
+#        with col2:
+        main_gif.empty()
+        gif_runner = st.image('images/processing.gif')
+        st.session_state['data_frame'] = get_data(dropdown)
+        data_frame = st.session_state['data_frame']
+        data_frame['product_price'] = data_frame['product_price'].astype(float)
+        data_frame['product_inventory_count'] = data_frame['product_inventory_count'].astype(int) 
+        gif_runner.empty()   
 
         # ----- Top KPI ------
         max_high = data_frame['product_price'].max()
@@ -2232,6 +2232,7 @@ elif choose == 'Find A GPU':
             # ----- Pie Chart ------ #
             # Distribution of Product Inventory
             grouped_df = data_frame_prime.groupby(by=['brand_name']).sum()
+            avg_df = data_frame_prime.groupby(by=['brand_name']).mean()
 
             graph_col1, graph_col2 = st.columns(2)
 
@@ -2242,8 +2243,8 @@ elif choose == 'Find A GPU':
             # ----- Bar Plot ------ #
             # Top Most Expensive Brand
             with graph_col2:
-                st.header(':moneybag: Distribution of Price :moneybag:')
-                bar_chart(grouped_df)
+                st.header(':moneybag: Distribution of Average Price :moneybag:')
+                bar_chart(avg_df)
 
             # ----- Grouped Bar Chart ------ #
             # Total Review Count
