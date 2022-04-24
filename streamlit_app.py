@@ -2063,10 +2063,66 @@ predicted = predict(log_model, X_test)
 
 
 
+        if choose_ML == "Decision Tree":
+            st.markdown('<p class="font">Decision Tree</p>', unsafe_allow_html=True)
+            st.warning('Decision Trees are a non-parametric supervised learning method for classification and regression that predicts the value of a target variable by learning simple decision rules inferred from the data features. A decision can be seen as a piecewise constant approximation.')
+            cols1, cols2 = st.columns(2)
+            tree_py = '''
+# Import Libraries 
+from sklearn import tree
 
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+##### Note that values must be numerical and numpy arrays #####
+X_train = input_variables_values_training_data
+X_test = input_variables_values_tests_data
+y_train = target_variables_values_training_data
 
+# Create Tree Object
+tree_model = tree.DecisionTreeClassifier(criterion = 'gini') # for the classification type, algrothim is by default 'gini' but entropy (information gain) can be used instead
 
+# Regressional Tree Object
+regression_tree_model = tree.DecisionTreeRegressor()
 
+# Training Model With Training Sets
+tree_model.fit(X_train, y_train)
+
+# Check Score
+tree_model.score(X_train, y_train)
+
+# Predict Output
+predicted = tree_model.predict(X_test)      
+
+# Plot Tree
+clf = tree_model.fit(X_train, y_train)
+tree_model.plot(clf)
+'''
+            R_tree= '''
+# Import packages
+library(rpart)
+
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+##### Note that values must be numerical and numpy arrays #####
+X_train <- input_variables_values_training_data
+X_test <- input_variables_values_tests_data
+y_train <- target_variables_values_training_data
+
+x <- cbind(X_train, y_train)
+
+# Tree Model
+clf <- rpart(y_train ~., data = x, method = "class")
+
+# Check Score
+summary(clf)
+
+# Predict Output
+predicted = predict(clf, X_test)
+'''
+            with col1:
+                st.code(tree_py, language='python')
+            with col2:
+                st.code(R_tree, language='R')
 
 
 
