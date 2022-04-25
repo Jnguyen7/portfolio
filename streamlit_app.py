@@ -1450,7 +1450,7 @@ plt.show()
 
 
     if choose == "SQL":
-        choose_sql = option_menu(None,["Important SQl Functions", "Recursion/Looping in SQL", "Case Statements", 'Aggregate Functions','Rollups','Ranking Functions', 'Analytic Functions', 'Modifying Data', 'Date', 'Strings'],
+        choose_sql = option_menu(None,["Important SQl Functions", "Complex SQL Functions", "Recursion/Looping in SQL", "Case Statements", 'Aggregate Functions','Rollups','Ranking Functions', 'Analytic Functions', 'Modifying Data', 'Date', 'Strings'],
                             icons=['blank', 'blank', 'blank', 'blank', 'blank','blank', 'blank', 'blank', 'blank', 'blank'],
                             styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
@@ -1533,6 +1533,47 @@ plt.show()
     HAVING COUNT(employees.employee_id) > 3
     ;'''
             st.code(code_max, language='sql')
+
+
+
+        if choose_sql == "Complex SQl Functions":
+            st.markdown(""" <style> .font {font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} </style> """, unsafe_allow_html=True)
+            st.markdown('<p class="font">Self Joins</p>', unsafe_allow_html=True)
+            st.header('Month-Over-Month Percent Change')
+            st.subheader('Logins')
+            st.write('''
+| user_id       | date         |
+|---------------|--------------|
+| 1             | 2022-01-01   |
+| 235           | 2022-05-09   |
+| 3             | 2022-05-09   |
+| ...           | ...          |
+| 235           | 2022-05-09   |
+''')
+            st.warning('Given the following user login table above, find the month-over-month percentage change for monthly active users.')
+
+            sql_mom = '''WITH CTE AS(
+SELECT 
+    TRUNC(date, 'month') AS month_date,
+    COUNT(DISTINCT user_id) AS active_users
+FROM 
+    Logins
+GROUP BY 
+    TRUNC(date, 'month')
+)
+SELECT
+    a.month_date AS previous_month,
+    a.active_users AS previous_user,
+    b.month_date AS current_month,
+    b.active_users AS current_user
+FROM CTE a
+JOIN CTE b
+    ON a.month_date = b.month_date - INTERVAL '1 month'
+
+'''
+
+
+
 
         if choose_sql == "Recursion/Looping in SQL":
             sql_df = pd.read_csv('csv_files/physicians.csv')
