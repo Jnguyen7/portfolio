@@ -1536,7 +1536,7 @@ plt.show()
 
 
 
-        if choose_sql == "Complex SQl Functions":
+        if choose_sql == "Complex SQL Functions":
             st.markdown(""" <style> .font {font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} </style> """, unsafe_allow_html=True)
             st.markdown('<p class="font">Self Joins</p>', unsafe_allow_html=True)
             st.header('Month-Over-Month Percent Change')
