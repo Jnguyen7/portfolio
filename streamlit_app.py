@@ -1937,7 +1937,7 @@ FROM table;'''
 
     if choose == "Machine Learning":
         choose_ML = option_menu(None,["Basic Terminology", "Splitting Data", "Linear Regression", "Logistic Regression", "Decision Tree", "Support Vector Machine (SVM)", "Naive Bayes", "K-Nearest Neightbors (KNN)", "K-Means", "Random Forest", "Dimension Redcution Algorithms", "Gradient Boosting & AdaBoost" ],
-                            icons=['journal-richtext','terminal-split,'graph-up-arrow', 'graph-up-arrow', 'tree', 'file-bar-graph', 'blank','blank', 'blank', 'blank', 'blank', 'blank'],
+                            icons=['journal-richtext','terminal-split','graph-up-arrow', 'graph-up-arrow', 'tree', 'file-bar-graph', 'blank','blank', 'blank', 'blank', 'blank', 'blank'],
                             styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
@@ -1980,7 +1980,7 @@ y_i \textrm{= predicted values}
 
 
         if choose_ML == "Splitting Data":
-            st.markdown('<p class="font">Linear Regression</p>', unsafe_allow_html=True)
+            st.markdown('<p class="font">Splitting the Dataset into Train and Testing Sets</p>', unsafe_allow_html=True)
             
         if choose_ML == "Linear Regression":
             st.markdown('<p class="font">Linear Regression</p>', unsafe_allow_html=True)
