@@ -1450,8 +1450,8 @@ plt.show()
 
 
     if choose == "SQL":
-        choose_sql = option_menu(None,["Important SQl Functions", "Complex SQL Functions", "Recursion/Looping in SQL", "Case Statements", 'Aggregate Functions','Rollups','Ranking Functions', 'Analytic Functions', 'Modifying Data', 'Date', 'Strings'],
-                            icons=['blank', 'blank', 'blank', 'blank', 'blank','blank', 'blank', 'blank', 'blank', 'blank', 'blank'],
+        choose_sql = option_menu(None,["Important SQl Functions", "Complex SQL Functions", 'Complex Window Functions',"Recursion/Looping in SQL", "Case Statements", 'Aggregate Functions','Rollups','Ranking Functions', 'Analytic Functions', 'Modifying Data','Date', 'Strings'],
+                            icons=['blank', 'blank', 'blank', 'blank', 'blank','blank', 'blank', 'blank', 'blank', 'blank', 'blank', 'blank'],
                             styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
@@ -1822,7 +1822,7 @@ FROM table;'''
             st.write('Delete the facilities table.')
             st.code('''DELETE FROM facilities;''', language='sql')
 
-            st.markdown('<p class="font">Deleting Existing Data Bassed On A Subquery</p>', unsafe_allow_html=True) 
+            st.markdown('<p class="font">Deleting Existing Data Based On A Subquery</p>', unsafe_allow_html=True) 
             st.write('Delete members who are not enrolled in any facilities.')
             st.code('''DELETE FROM members 
     WHERE memid NOT IN (SELECT memid FROM bookings);''', language='sql')
@@ -1877,7 +1877,45 @@ FROM table;'''
             st.markdown('<p class="font">Date </p>', unsafe_allow_html=True)
             
 
+        if choose_sql == "Complex Window Functions":
+            st.markdown(""" <style> .font {
+            font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+            </style> """, unsafe_allow_html=True)
+            st.header('Electronics')
+            st.write('''
+| product_category   | brand        | product_name | price        |
+|--------------------|--------------|--------------|--------------|
+| Phone              | Apple        | iPhone 12 Pro Max      | 1300      |
+| Phone         | Apple        | iPhone 12 Pro      | 1100      |
+| Phone          | Apple        | iPhone 12      | 1000      |
+| Phone      | Samsung        | Galaxy Z Fold 3      | 1800      |
+| Phone | Samsung        | Galaxy Z Flip 3      | 1000      |
+| Phone | Samsung        | Galaxy Note 20       | 1200      |
+| Phone | Samsung        | Galaxy S21      | 1000      |
+| ... | ...        | ...      | ...      |
+| Headphone | Apple        | AirPods Max      | 550      |
+| Headphone | Sony        | WH-1000XM4      | 400      |
+| Headphone | Microsoft        | Surface Headphones 2      | 250      |
+| ... | ...        | ...      | ...      |
+| Laptop | Dell        | XPS 17      | 2500      |
+| Laptop | Dell        | XPS 15      | 2300      |
+| Laptop | Microsoft        | Surface Laptop 4      | 2100      |
+| Laptop | Apple        | MacBook Pro 13      | 2000      |
+''')
+            st.markdown('<p class="font">Complex Window Functions</p>', unsafe_allow_html=True)
+            st.subheader('First_Value()')
 
+            st.subheader('Last_Value()')
+
+            st.subheader('Frame Clause')
+
+            st.subheader('Nth_Value()')
+
+            st.subheader('NTILE()')
+            
+            st.subheader('CUME_DIST()')
+
+            st.subheader('Percent_Rank()')
 
 
 
@@ -2152,7 +2190,7 @@ y_train <- target_variables_values_training_data
 x <- cbind(X_train, y_train)
 
 # Tree Model
-clf <- rpart(y_train ~., data = x, method = "class")
+clf <- rpart(y_train ~., data = X_train, method = "class")
 
 # Check Score
 summary(clf)
@@ -2161,14 +2199,68 @@ summary(clf)
 predicted = predict(clf, X_test)
 '''
             with cols1:
+                st.header('Python')
                 st.code(tree_py, language='python')
             with cols2:
+                st.header('R')
                 st.code(R_tree, language='R')
 
 
+        if choose_ML == "Support Vector Machine (SVM)":
+            st.markdown('<p class="font">Support Vector Machine (SVM)', unsafe_allow_html=True)
+            st.warning('Support Vector Machine (SVM) is a supervised machine learning algorithm that analyzes data for classification and regressional analysis. The main paradigm of SVM is that it finds a hyperplane in an N-dimensional space that distinctly classifies the data points where N is the number of features. Many choices of hyperplanes can be chosen but SVM seeks to find the plane that has the maximum margin such that the plane maximizes the maximum distance between data points of both classes. Maximizing the margin distance provides reinforcement such that future data points can be classified with more cofidence.')
 
+            cols1, cols2 = st.columns(2)
+            svm_py = '''
+# Import Libraries 
+from sklearn import svm
 
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+##### Note that values must be numerical and numpy arrays #####
+X_train = input_variables_values_training_data
+X_test = input_variables_values_tests_data
+y_train = target_variables_values_training_data
 
+# SVM Classification Object
+svm_model = svm.svc() # many options exists. This particular option is used for simple classication.
+
+# Training Model With Training Sets
+svm_model.fit(X_train, y_train)
+
+# Check Score
+svm_model.score(X_train, y_train)
+
+# Predict Output
+predicted = svm_model.predict(X_test)
+'''
+            svm_r= '''
+# Import packages
+library(e1071)
+
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+X_train <- input_variables_values_training_data
+X_test <- input_variables_values_tests_data
+y_train <- target_variables_values_training_data
+
+x <- cbind(X_train, y_train)
+
+# Fitting Model
+model_fit <- svm(y_train ~., data = X_train)
+
+# Check Score
+summary(model_fit)
+
+# Predict Output
+predicted = predict(model_fit, X_test)
+'''
+            with cols1:
+                st.header('Python')
+                st.code(svm_py, language='python')
+            with cols2:
+                st.header('R')
+                st.code(svm_r, language='R')
 
 
 
