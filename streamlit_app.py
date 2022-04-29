@@ -2105,12 +2105,12 @@ print(f'Testing Set Size: {X_test.shape[0]}')
             st.code(pandas_split, language= 'python')
 
             import pandas as pd
-            from sklearn.datasets import load_iris
+            import sklearn
             from sklearn.model_selection import train_test_split            
             import numpy as np
 
             # Import Dataset
-            iris_data = load_iris()
+            iris_data = sklearn.datasets.load_iris()
             df = pd.DataFrame(iris_data.data, 
                 columns = iris_data.feature_names)
 
