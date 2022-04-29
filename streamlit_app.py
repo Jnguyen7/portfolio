@@ -1905,10 +1905,68 @@ FROM table;'''
             st.markdown('<p class="font">Complex Window Functions</p>', unsafe_allow_html=True)
             st.subheader('First_Value()')
 
-            st.subheader('Last_Value()')
-
-            st.subheader('Frame Clause')
-
+            st.write('Write a query to display the most and least expensive product under each product category.')
+            first_value = '''
+SELECT 
+    *,
+    FIRST_VALUE(product_name) OVER (PARTITION BY product_category ORDER BY price DESC) AS most_exp_product_categrory
+FROM Electronics;
+'''
+            st.code(first_value, language= 'sql')
+            st.write('''
+| product_category   | brand        | product_name | price        | most_exp_product_category        |
+|--------------------|--------------|--------------|--------------|--------------|
+| Phone              | Apple        | iPhone 12 Pro Max      | 1300      | iPhone 12 Pro Max      | 
+| Phone         | Apple        | iPhone 12 Pro      | 1100      | iPhone 12 Pro Max      | 
+| Phone          | Apple        | iPhone 12      | 1000      | iPhone 12 Pro Max      | 
+| Phone      | Samsung        | Galaxy Z Fold 3      | 1800      | iPhone 12 Pro Max      | 
+| Phone | Samsung        | Galaxy Z Flip 3      | 1000      | iPhone 12 Pro Max      | 
+| Phone | Samsung        | Galaxy Note 20       | 1200      | iPhone 12 Pro Max      | 
+| Phone | Samsung        | Galaxy S21      | 900      | iPhone 12 Pro Max      |
+| ... | ...        | ...      | ...      | ...      | 
+| Headphone | Apple        | AirPods Max      | 550      | AirPods Max       |
+| Headphone | Sony        | WH-1000XM4      | 400      | AirPods Max       | 
+| Headphone | Microsoft        | Surface Headphones 2      | 250      | AirPods Max       |
+| ... | ...        | ...      | ...      | ...       | 
+| Laptop | Dell        | XPS 17      | 2500      | XPS 17        | 
+| Laptop | Dell        | XPS 15      | 2300      | XPS 17        | 
+| Laptop | Microsoft        | Surface Laptop 4      | 2100      | XPS 17        | 
+| Laptop | Apple        | MacBook Pro 13      | 2000      | XPS 17        | 
+''')
+            st.subheader('Last_Value() & Frame Clause')
+            st.warning('A window function by definition creates a window or a partition and it applies that window to each of those partitions. Inside each of these partitions, we can again create a subset of records called frames. Therefore, a frame is a some subset of a partition.')
+            last_value = '''
+SELECT 
+    *,
+    FIRST_VALUE(product_name) 
+        OVER (PARTITION BY product_category ORDER BY price DESC) AS most_exp_product_categrory,
+    LAST_VALUE(product_name) 
+        OVER (PARTITION BY product_category ORDER BY price DESC
+            RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+        ) AS least_exp_product_categrory
+FROM Electronics;               
+'''
+            st.code(last_value, language='sql')
+            st.write('''
+| product_category   | brand        | product_name | price        | most_exp_product_category        | least_exp_product_category        |
+|--------------------|--------------|--------------|--------------|--------------|--------------|
+| Phone              | Apple        | iPhone 12 Pro Max      | 1300      | iPhone 12 Pro Max      | Galaxy S21      |
+| Phone         | Apple        | iPhone 12 Pro      | 1100      | iPhone 12 Pro Max      | Galaxy S21      |
+| Phone          | Apple        | iPhone 12      | 1000      | iPhone 12 Pro Max      | Galaxy S21      |
+| Phone      | Samsung        | Galaxy Z Fold 3      | 1800      | iPhone 12 Pro Max      | Galaxy S21      |
+| Phone | Samsung        | Galaxy Z Flip 3      | 1000      | iPhone 12 Pro Max      | Galaxy S21      |
+| Phone | Samsung        | Galaxy Note 20       | 1200      | iPhone 12 Pro Max      | Galaxy S21      |
+| Phone | Samsung        | Galaxy S21      | 900      | iPhone 12 Pro Max      | Galaxy S21      |
+| ... | ...        | ...      | ...      | ...      | ...      |
+| Headphone | Apple        | AirPods Max      | 550      | AirPods Max       | Surface Headphones 2      |
+| Headphone | Sony        | WH-1000XM4      | 400      | AirPods Max       | Surface Headphones 2      |
+| Headphone | Microsoft        | Surface Headphones 2      | 250      | AirPods Max       | Surface Headphones 2      |
+| ... | ...        | ...      | ...      | ...       | ...      |
+| Laptop | Dell        | XPS 17      | 2500      | XPS 17        | MacBook Pro 13      |
+| Laptop | Dell        | XPS 15      | 2300      | XPS 17        | MacBook Pro 13      |
+| Laptop | Microsoft        | Surface Laptop 4      | 2100      | XPS 17        | MacBook Pro 13      |
+| Laptop | Apple        | MacBook Pro 13      | 2000      | XPS 17        | MacBook Pro 13      |
+''')
             st.subheader('Nth_Value()')
 
             st.subheader('NTILE()')
