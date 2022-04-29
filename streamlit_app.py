@@ -2077,7 +2077,125 @@ y_i \textrm{= predicted values}
 
         if choose_ML == "Splitting Data":
             st.markdown('<p class="font">Splitting the Dataset into Train and Testing Sets</p>', unsafe_allow_html=True)
+            st.warning('Overfitting a model occurs when a model performs really well on the dataset that is used to train the model. This fails to generalize optimally to new and unseen data points.')
+            st.warning('Underfitting a model occurs when a model performs really poor on the dataset. Underfitting occurs because the model is not suitable for the target problem.')
+            st.write('Therefore, creating different data samples for training and testing a model is the most common approach to identify these issues above. Overall, we can use the training dataset to create the model and then treat the testing dataset as a collection of data points that will evaluate whether the model can generalize to new unseen data. Commonly, 4/5 or 80 percent of the dataset is used for training and the remainder for testing. For example, if the training accuracy is extremely high while the testing accuracy is poor then this is a good indicator that the model is overfitted.')
             
+            st.subheader('Splitting With Pandas')
+            st.warning('We should define random_state which corresponds to the seed so that results can be reproducible.')
+            pandas_split = '''
+# Import Libraries
+import pandas as pd
+from sklearn.datasets import load_iris            
+
+# Import Dataset
+iris_data = load_iris()
+df = pd.DataFrame(iris_data.data, 
+    colums = iris_data.feature_names)
+
+# Split Dataset
+X_train = df.sample(frac = 0.8, random_state = 25)
+X_test = df.drop(X_train.index)
+
+X_train.head()
+print(f'Training Set Size: {X_train.shape[0]}')
+X_test.head()
+print(f'Testing Set Size: {X_test.shape[0]}')
+'''
+            st.code(pandas_split, language= 'python')
+
+            import pandas as pd
+            from sklearn.datasets import load_iris
+            from sklearn.model_selection import train_test_split            
+            import numpy as np
+
+            # Import Dataset
+            iris_data = load_iris()
+            df = pd.DataFrame(iris_data.data, 
+                columns = iris_data.feature_names)
+
+            # Split Dataset
+            X_train = df.sample(frac = 0.8, random_state = 25)
+            X_test = df.drop(X_train.index)
+
+            col1,col2 = st.columns(2)
+            with col1:
+                st.dataframe(X_train.head())
+                st.write(f'Training Set Size: {X_train.shape[0]}')
+            with col2:
+                st.dataframe(X_test.head())
+                st.write(f'Testing Set Size: {X_test.shape[0]}')
+
+            st.write('---')
+            st.subheader('Spliting With Scikit-learn')
+            sci_split = '''
+# Import Libraries
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split            
+
+# Import Dataset
+iris_data = load_iris()
+df = pd.DataFrame(iris_data.data, 
+    colums = iris_data.feature_names)
+
+# Split Dataset
+X_train, X_test = train_test_split(df, test_size = 0.2, random_state = 25)
+
+X_train.head()
+print(f'Training Set Size: {X_train.shape[0]}')
+X_test.head()
+print(f'Testing Set Size: {X_test.shape[0]}')
+'''
+
+            st.code(sci_split, language= 'python')
+            X_train, X_test = train_test_split(df, test_size = 0.2, random_state = 25)
+
+            col1,col2 = st.columns(2)
+            with col1:
+                st.dataframe(X_train.head())
+                st.write(f'Training Set Size: {X_train.shape[0]}')
+            with col2:
+                st.dataframe(X_test.head())
+                st.write(f'Testing Set Size: {X_test.shape[0]}')
+
+            st.write('---')
+            st.subheader('Splitting With Numpy')
+            st.error('Unorthodox and uncommon way to split the dataset.')
+            numpy_split = '''
+# Import Libraries
+import pandas as pd
+from sklearn.datasets import load_iris
+import numpy as np           
+
+# Import Dataset
+iris_data = load_iris()
+df = pd.DataFrame(iris_data.data, 
+    colums = iris_data.feature_names)
+
+# Split Dataset
+mask = np.random.rand(len(df)) <= 0.8
+X_train = df[mask]
+X_test = df[~mask]
+
+X_train.head()
+print(f'Training Set Size: {X_train.shape[0]}')
+X_test.head()
+print(f'Testing Set Size: {X_test.shape[0]}')
+'''
+            mask = np.random.rand(len(df)) <= 0.8
+            X_train = df[mask]
+            X_test = df[~mask]
+
+            col1,col2 = st.columns(2)
+            with col1:
+                st.dataframe(X_train.head())
+                st.write(f'Training Set Size: {X_train.shape[0]}')
+            with col2:
+                st.dataframe(X_test.head())
+                st.write(f'Testing Set Size: {X_test.shape[0]}')
+
+
         if choose_ML == "Linear Regression":
             st.markdown('<p class="font">Linear Regression</p>', unsafe_allow_html=True)
             st.warning("Linear model that assumes a linear relationship between the input variables (x) and the single output variable (y). That is, y can be calculated from a linear combination of the input variables, x.")  
