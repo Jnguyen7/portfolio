@@ -692,6 +692,92 @@ elif choose == "Archive":
             st.subheader('Iris Dataset')
             st.dataframe(iris)
         
+        grouped_py = option_menu('Categories',["Distributions","Correlation", "Ranking", "Evolution", "Maps", "3D Plots"],
+                        icons=['box', 'graph-up','bar-chart-fill', 'graph-up-arrow', 'map', 'badge-3d'],
+                        orientation = 'horizontal',
+                        styles={
+        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#ddbea9"}
+        }
+        )
+
+        if grouped_py == "Distributions":
+            st.header('Distributions')
+            choose_py = option_menu(None,["Histograms","Box Plots", "Violin Plots", "Scatter Matrix", "Kernal Density Estimation"],
+                         icons=['box', 'box', 'box', 'box'],
+                         styles={
+        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#ddbea9"},
+        }
+        )
+
+        if grouped_py == "Correlation":
+            st.header('Correlation')
+            choose_py = option_menu(None,["Scatter Plots","Density Heatmap", "Correlogram", "2D Scatter Plots"],
+                         icons=['graph-up', 'graph-up', 'graph-up', 'graph-up'],
+                         styles={
+        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#ddbea9"},
+        }
+        )
+
+
+        if grouped_py == "Ranking":
+            st.header('Ranking')
+            choose_py = option_menu(None,["Bar Plots","Pie Charts", "Lillipops", "Tree Maps", "Radar/Polar Plots"],
+                         icons=['bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill'],
+                         styles={
+        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#ddbea9"},
+        }
+        )
+
+        if grouped_py == "Evolution":
+            st.header('Evolution')
+            choose_py = option_menu(None,["Line Plots","Area Plots"],
+                         icons=['graph-up-arrow', 'graph-up-arrow'],
+                         styles={
+        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#ddbea9"},
+        }
+        )
+
+        if grouped_py == "Maps":
+            st.header('Maps')
+            choose_py = option_menu(None,["Choropleth","Bubble Maps"],
+                         icons=['map', 'map'],
+                         styles={
+        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#ddbea9"},
+        }
+        )
+
+        if grouped_py == "3D Plots":
+            st.header('3D Plots')
+            choose_py = option_menu(None,["Surface Maps"],
+                         icons=['badge-3d'],
+                         styles={
+        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#ddbea9"},
+        }
+        )
+
+
+
         choose_py = option_menu(None,["Barplot","Grouped Circular Barplot", "Scatterplot", "Lollipop", "Radar Plot", "Pie Plot", "Tree Map"],
                          icons=['bar-chart-line-fill', 'pie-chart','graph-up', 'sliders', 'bullseye', 'pie-chart-fill', 'tree-fill'],
                          styles={
@@ -2033,7 +2119,7 @@ FROM Electronics;
 
     if choose == "Machine Learning":
         choose_ML = option_menu(None,["Basic Terminology", "Splitting Data", "Linear Regression", "Logistic Regression", "Decision Tree", "Support Vector Machine (SVM)", "Naive Bayes", "K-Nearest Neightbors (KNN)", "K-Means", "Random Forest", "Dimension Redcution Algorithms", "Gradient Boosting & AdaBoost" ],
-                            icons=['journal-richtext','terminal-split','graph-up-arrow', 'graph-up-arrow', 'tree', 'file-bar-graph', 'blank','blank', 'blank', 'blank', 'blank', 'blank'],
+                            icons=['journal-richtext','terminal-split','graph-up-arrow', 'graph-up-arrow', 'tree', 'file-bar-graph', 'align-center','blank', 'blank', 'blank', 'blank', 'blank'],
                             styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
@@ -2437,6 +2523,64 @@ predicted = predict(model_fit, X_test)
                 st.code(svm_r, language='R')
 
 
+        if choose_ML == "Naive Bayes":
+            st.markdown('<p class="font">Naive Bayes', unsafe_allow_html=True)
+            st.warning('Naive Bayes methods are a set of supervised learning algorithms based on applying Bayes theorem with the “naive” assumption of conditional independence between every pair of features given the value of the class variable.')
+            st.header('Bayes Theorem')
+            st.latex(r'''
+P(A|B) = \frac{P(B|A)P(A)}{P(B)} 
+''')
+            cols1, cols2 = st.columns(2)
+            svm_py = '''
+# Import Libraries 
+from sklearn.naive_bayes import GaussianNB
+
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+##### Note that values must be numerical and numpy arrays #####
+X_train = input_variables_values_training_data
+X_test = input_variables_values_tests_data
+y_train = target_variables_values_training_data
+
+# Classification Object
+gauss_model = GaussianNB() # many options exists like Bernoulli Naive Bayes
+
+# Training Model With Training Sets
+gauss_model.fit(X_train, y_train)
+
+# Check Score
+gauss_model.score(X_train, y_train)
+
+# Predict Output
+predicted = gauss_model.predict(X_test)
+'''
+            svm_r= '''
+# Import packages
+library(e1071)
+
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+X_train <- input_variables_values_training_data
+X_test <- input_variables_values_tests_data
+y_train <- target_variables_values_training_data
+
+x <- cbind(X_train, y_train)
+
+# Fitting Model
+model_fit <- naibeBayes(y_train ~., data = X_train)
+
+# Check Score
+summary(model_fit)
+
+# Predict Output
+predicted = predict(model_fit, X_test)
+'''
+            with cols1:
+                st.header('Python')
+                st.code(svm_py, language='python')
+            with cols2:
+                st.header('R')
+                st.code(svm_r, language='R')
 
 
 
