@@ -2110,9 +2110,7 @@ print(f'Testing Set Size: {X_test.shape[0]}')
             import numpy as np
 
             # Import Dataset
-            iris_data = sklearn.datasets.load_iris()
-            df = pd.DataFrame(iris_data.data, 
-                columns = iris_data.feature_names)
+            df = pd.read_csv('csv_files/iris.csv')
 
             # Split Dataset
             X_train = df.sample(frac = 0.8, random_state = 25)
