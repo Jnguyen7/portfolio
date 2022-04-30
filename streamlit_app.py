@@ -1,5 +1,6 @@
 #from tkinter import HORIZONTAL
 #from turtle import width
+import code
 from operator import irshift
 from statistics import mean
 #from turtle import color
@@ -705,8 +706,8 @@ elif choose == "Archive":
 
         if grouped_py == "Distributions":
             st.header('Distributions')
-            choose_py = option_menu(None,["Histograms","Box Plots", "Violin Plots", "Scatter Matrix", "Kernal Density Estimation"],
-                         icons=['box', 'box', 'box', 'box'],
+            choose_distribution = option_menu(None,["Histograms","Box Plots", "Violin Plots", "Scatter Matrix", "Kernal Density Estimation"],
+                         icons=['box', 'box', 'box', 'box', 'box'],
                          styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
@@ -714,10 +715,211 @@ elif choose == "Archive":
         "nav-link-selected": {"background-color": "#ddbea9"},
         }
         )
+            if choose_distribution == "Histograms":
+                st.markdown('<p class="font">Histograms</p>', unsafe_allow_html=True)
+                hist_code = '''
+# Import libraries and dataset
+import seaborn as sns
+import matplotlib.pyplot as plt
+import ploty.express as px
+import pandas as pd
+
+df = sns.load_dataset("iris")
+
+# Initialize Plot
+sns.set(style="darkgrid")
+
+sns.histplot(data=df, x="sepal_length",
+    color="skyblue",
+    label="Sepal Length",
+    kde=True)
+sns.histplot(data=df,
+    x="sepal_width",
+    color="red",
+    label="Sepal Width",
+    kde=True)
+
+plt.legend() 
+plt.show()
+'''
+                st.code(hist_code, language='python')
+                sns.set(style="darkgrid")
+
+                sns.histplot(data=iris, x="sepal.length",
+                    color="skyblue",
+                    label="Sepal Length",
+                    kde=True)
+                sns.histplot(data=iris,
+                    x="sepal.width",
+                    color="red",
+                    label="Sepal Width",
+                    kde=True)
+
+                plt.legend() 
+                st.pyplot()
+
+            if choose_distribution == "Box Plots":
+                st.markdown('<p class="font">Box Plots</p>', unsafe_allow_html=True)
+                hist_code = '''
+# Import libraries and dataset
+import seaborn as sns
+import matplotlib.pyplot as plt
+import ploty.express as px
+import pandas as pd
+
+df = sns.load_dataset('iris')
+
+# Initialize Plot
+sns.set(style="darkgrid")
+plt.figure(figsize=[14,10])
+
+# Add Boxplot
+ax = sns.boxplot(x = 'species',
+    y = 'petal_length',
+    data = df)
+
+# Add Striplot
+ax = sns.stripplot(x = 'species',
+    y = 'petal_length',
+    data = df,
+    color = "orange",
+    jitter = 0.2,
+    size = 2.5)
+
+# Plot Labels
+plt.title("Iris Species Boxplot With Jitter", loc = "center")
+'''
+                sns.set(style="darkgrid")
+                plt.figure(figsize=[14,10])
+
+                # Add Boxplot
+                ax = sns.boxplot(x = 'variety',
+                    y = 'petal.length',
+                    data = iris)
+
+                # Add Striplot
+                ax = sns.stripplot(x = 'variety',
+                    y = 'petal.length',
+                    data = iris,
+                    color = "orange",
+                    jitter = 0.2,
+                    size = 2.5)
+
+                # Plot Labels
+                plt.title("Iris Species Boxplot With Jitter", loc = "center")
+                st.code(hist_code, language='python')
+                st.pyplot()
+
+            if choose_distribution == "Violin Plots":
+                st.markdown('<p class="font">Violin Plots</p>', unsafe_allow_html=True)
+                hist_code = '''
+# Import libraries and dataset
+import seaborn as sns
+import matplotlib.pyplot as plt
+import ploty.express as px
+import pandas as pd
+
+df = sns.load_dataset("penguins")
+
+# Initialize Plot
+sns.set(style="darkgrid")
+
+# Add Violin Plot
+sns.violinplot(x = "island",
+    y = "body_mass_g",
+    data = df,
+    hue = "species",
+    palette = "Pastel1")
+
+plt.show()
+'''
+                df = sns.load_dataset("penguins")
+
+                # Initialize Plot
+                sns.set(style="darkgrid")
+
+                # Add Violin Plot
+                sns.violinplot(x = "island",
+                    y = "body_mass_g",
+                    data = df,
+                    hue = "species",
+                    palette = "Pastel1")
+
+                st.code(hist_code, language='python')
+                st.pyplot()
+
+            if choose_distribution == "Scatter Matrix":
+                st.markdown('<p class="font">Scatter Matrix</p>', unsafe_allow_html=True)
+                hist_code = '''
+# Import libraries and dataset
+import seaborn as sns
+import matplotlib.pyplot as plt
+import ploty.express as px
+import pandas as pd
+
+df = sns.load_dataset("penguins")
+
+# Initialize Plot
+sns.set(style="ticks")
+
+# Add Scatter Matrix
+sns.pairplot(data = df,
+    hue = "species")
+'''
+                df = sns.load_dataset("penguins")
+
+                # Initialize Plot
+                sns.set(style="ticks")
+
+                # Add Scatter Matrix
+                sns.pairplot(data = df,
+                    hue = "species")
+                st.code(hist_code, language='python')
+                st.pyplot()
+
+            if choose_distribution == "Kernal Density Estimation":
+                st.markdown('<p class="font">Kernal Density Estimation</p>', unsafe_allow_html=True)
+                hist_code = '''
+# Import libraries and dataset
+import seaborn as sns
+import matplotlib.pyplot as plt
+import ploty.express as px
+import pandas as pd
+
+df = sns.load_dataset("penguins")
+
+# Initialize Plot
+sns.set(style="darkgrid")
+
+# Plot Density Curves
+fig = sns.kdeplot(df['bill_length_mm'],
+    shade=True,
+    color="r")
+fig = sns.kdeplot(df['bill_depth_mm'],
+    shade=True,
+    color="b")
+
+plt.show()
+'''
+                df = sns.load_dataset("penguins")
+
+                # Initialize Plot
+                sns.set(style="darkgrid")
+
+                # Plot Density Curves
+                fig = sns.kdeplot(df['bill_length_mm'],
+                    shade=True,
+                    color="r")
+                fig = sns.kdeplot(df['bill_depth_mm'],
+                    shade=True,
+                    color="b")
+                st.code(hist_code, language='python')
+                st.pyplot()
+
 
         if grouped_py == "Correlation":
             st.header('Correlation')
-            choose_py = option_menu(None,["Scatter Plots","Density Heatmap", "Correlogram", "2D Scatter Plots"],
+            choose_correlation = option_menu(None,["Scatter Plots","Density Heatmap", "Correlogram", "2D Scatter Plots"],
                          icons=['graph-up', 'graph-up', 'graph-up', 'graph-up'],
                          styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
@@ -726,11 +928,259 @@ elif choose == "Archive":
         "nav-link-selected": {"background-color": "#ddbea9"},
         }
         )
+            if choose_correlation == 'Scatter Plots':
+                st.markdown('<p class="font">Scatter Plots</p>', unsafe_allow_html=True)
+                hist_code = '''
+# Import libraries and dataset
+import seaborn as sns
+import matplotlib.pyplot as plt
+import ploty.express as px
+import pandas as pd
+
+df = sns.load_dataset("mpg")
+
+# Scatter Plot
+sns.lmplot(x = "weight",
+    y = "horsepower",
+    data = df,
+    fit_reg = False,
+    hue = "origin",
+    markers = ["o", "x", "1"],
+    palette= 'pastel',
+    legend = False,
+    height= 14)
+    
+# Move Legend Location
+plt.legend(loc = "lower right")
+
+plt.show()
+'''
+                df = sns.load_dataset("mpg")
+
+                # Scatter Plot
+                sns.lmplot(x = "weight",
+                    y = "horsepower",
+                    data = df,
+                    fit_reg = False,
+                    hue = "origin",
+                    markers = ["o", "x", "1"],
+                    palette= 'pastel',
+                    legend = False,
+                    height= 14)
+                    
+                # Move Legend Location
+                plt.legend(loc = "lower right")
+
+                st.code(hist_code, language='python')
+                st.pyplot()
+
+                scatter = '''
+# Import Libraries
+import pandas as pd
+import seaborn as sns
+
+# Import dataset
+texas_data = pd.read_csv('csv_files/texas3.csv')
+
+# Scatterplot
+sns.set(style="white", color_codes=True)
+sns.jointplot(x=texas_data["y"],
+    y=-texas_data["x"],
+    kind='scatter',
+    s=200,
+    color='m',
+    edgecolor="skyblue",
+    linewidth=2)
+
+plt.show()
+
+# Hex Plot
+sns.set(style="white", color_codes=True)
+sns.jointplot(x=texas_data["y"],
+    y=-texas_data["x"],
+    kind='hex',
+    marginal_kws=dict(bins=30, fill=True))
+
+plt.show()
+
+# Kernal Density Estimation
+sns.set(style="white", color_codes=True)
+sns.jointplot(x=texas_data["y"],
+    y=-texas_data["x"],
+    kind='kde',
+    color="skyblue")
+
+plt.show()
+'''
+                st.code(scatter, language='python')
+
+                # ----- Texas Scatter Plot ----- #      
+                texas_data = pd.read_csv('csv_files/texas3.csv')
+                home_col1, home_col2, home_col3 = st.columns(3)
+                with home_col1:
+                    st.subheader('Scatterplot')
+                    scatter_plot(texas_data, 'x', 'y')
+                with home_col2:
+                    st.subheader('Hex Plot')
+                    hex_plot(texas_data, 'x', 'y')
+                with home_col3:
+                    st.subheader('KDE Plot')
+                    kde_plot(texas_data, 'x', 'y')
+                        
+
+            if choose_correlation == 'Density Heatmap':
+                st.markdown('<p class="font">Density Heatmaps</p>', unsafe_allow_html=True)
+                hist_code = '''
+# Import libraries and dataset
+import seaborn as sns
+import matplotlib.pyplot as plt
+import ploty.express as px
+import pandas as pd
+import numpy as np
+ 
+sns.set(style="darkgrid")
+plt.figure(figsize=[14,10])
+
+# Create a dataset
+df = pd.DataFrame(np.random.random((10,10)),
+    columns=["a","b","c","d","e","f","g","h","i","j"])
+
+# Heatmap
+sns.heatmap(df,
+    annot=True,
+    annot_kws={"size": 7},
+    linecolor = 'yellow'm
+    linewidths = 2)
+'''
+                sns.set(style="darkgrid")
+                plt.figure(figsize=[14,10])
+
+                # Create a dataset
+                df = pd.DataFrame(np.random.random((10,10)),
+                    columns=["a","b","c","d","e","f","g","h","i","j"])
+
+                # Heatmap
+                sns.heatmap(df,
+                    annot=True,
+                    annot_kws={"size": 7},
+                    linecolor = 'yellow',
+                    linewidths = 2)
+                st.code(hist_code, language='python')
+                st.pyplot()
+
+            if choose_correlation == 'Correlogram':
+                st.markdown('<p class="font">Correlogram</p>', unsafe_allow_html=True)
+                hist_code = '''
+# Import libraries and dataset
+import seaborn as sns
+import matplotlib.pyplot as plt
+import ploty.express as px
+import pandas as pd
+
+df = sns.load_dataset("iris")
+
+# Left Plot
+sns.pairplot(df,
+    kind="scatter",
+    hue="species",
+    markers=["o", "s", "D"],
+    palette="Set2",
+    height = 14)
+plt.show()
+'''
+                df = sns.load_dataset("iris")
+
+                # Left Plot
+                sns.pairplot(df,
+                    kind="scatter",
+                    hue="species",
+                    markers=["o", "s", "D"],
+                    palette="Set2",
+                    height = 14)
+                plt.show()
+                st.code(hist_code, language='python')
+                st.pyplot()
+
+            if choose_correlation == '2D Scatter Plots':
+                st.markdown('<p class="font">2D Scatter Plots</p>', unsafe_allow_html=True)
+                hist_code = '''
+# Import libraries and dataset
+import seaborn as sns
+import matplotlib.pyplot as plt
+import ploty.express as px
+import pandas as pd
+
+df = sns.load_dataset("iris")
+
+# Custom the color
+sns.set(style="white", color_codes=True)
+
+# Custom Plots
+sns.jointplot(x=df["sepal_length"], y=df["sepal_width"],
+kind='scatter',
+color='m',
+edgecolor="skyblue")
+sns.jointplot(x=d,f["sepal_length"], y=df["sepal_width"],
+kind='hex',
+color='m',
+edgecolor="skyblue")
+sns.jointplot(x=df["sepal_length"], y=df["sepal_width"],
+kind='kde',
+color='m',
+edgecolor="skyblue")
+sns.jointplot(x=df["sepal_length"], y=df["sepal_width"],
+kind='resid',
+color='m',
+edgecolor="skyblue")    
+sns.jointplot(x=df["sepal_length"], y=df["sepal_width"],
+kind='reg',
+color='m',
+edgecolor="skyblue")
+
+plt.show()
+'''
+            df = sns.load_dataset("iris")
+            st.code(hist_code, language='python') 
+
+            # Custom the color
+            sns.set(style="white", color_codes=True)
+
+            one,two,three,four,five = st.columns(5)
+            with one:
+                sns.jointplot(x=df["sepal_length"], y=df["sepal_width"],
+                kind='scatter',
+                color='m',
+                edgecolor="skyblue")
+                st.pyplot()
+            with two:
+                sns.jointplot(x=df["sepal_length"], y=df["sepal_width"],
+                kind='hex',
+                color='m',
+                edgecolor="skyblue")
+                st.pyplot()
+            with three:
+                sns.jointplot(x=df["sepal_length"], y=df["sepal_width"],
+                kind='kde',
+                color='m',
+                edgecolor="skyblue")
+                st.pyplot()
+            with four:
+                sns.jointplot(x=df["sepal_length"], y=df["sepal_width"],
+                kind='resid',
+                color='m')
+                st.pyplot()
+            with five:
+                sns.jointplot(x=df["sepal_length"], y=df["sepal_width"],
+                    kind='reg',
+                    color='m')
+                st.pyplot()
+                
+            
 
 
         if grouped_py == "Ranking":
             st.header('Ranking')
-            choose_py = option_menu(None,["Bar Plots","Pie Charts", "Lillipops", "Tree Maps", "Radar/Polar Plots"],
+            choose_ranking = option_menu(None,["Bar Plots","Pie Charts", "Lollipops", "Tree Maps", "Radar/Polar Plots"],
                          icons=['bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill'],
                          styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
@@ -740,57 +1190,9 @@ elif choose == "Archive":
         }
         )
 
-        if grouped_py == "Evolution":
-            st.header('Evolution')
-            choose_py = option_menu(None,["Line Plots","Area Plots"],
-                         icons=['graph-up-arrow', 'graph-up-arrow'],
-                         styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
-        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
-        }
-        )
-
-        if grouped_py == "Maps":
-            st.header('Maps')
-            choose_py = option_menu(None,["Choropleth","Bubble Maps"],
-                         icons=['map', 'map'],
-                         styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
-        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
-        }
-        )
-
-        if grouped_py == "3D Plots":
-            st.header('3D Plots')
-            choose_py = option_menu(None,["Surface Maps"],
-                         icons=['badge-3d'],
-                         styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
-        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
-        }
-        )
-
-
-
-        choose_py = option_menu(None,["Barplot","Grouped Circular Barplot", "Scatterplot", "Lollipop", "Radar Plot", "Pie Plot", "Tree Map"],
-                         icons=['bar-chart-line-fill', 'pie-chart','graph-up', 'sliders', 'bullseye', 'pie-chart-fill', 'tree-fill'],
-                         styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
-        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
-        }
-        )
-        if choose_py == "Barplot":
-            st.markdown('<p class="font">Barplots Using Seaborn</p>', unsafe_allow_html=True)
-
-            bar_code = '''
+            if choose_ranking == 'Bar Plots':
+                st.markdown('<p class="font">Bar Plots </p>', unsafe_allow_html=True)
+                bar_code = '''
             # Import Libraries
 import pandas as pd
 import seaborn as sns
@@ -816,26 +1218,26 @@ bar_fig = sns.barplot(
     estimator = mean)      
 '''
 
-            st.code(bar_code, language='python')
+                st.code(bar_code, language='python')
 
-            colors = sns.color_palette("hls", 8)
-            sns.set(style="darkgrid")
-            ax, fig = plt.subplots(figsize= [10,7])
-            bar_fig = sns.barplot(
-                data = iris,
-                x = 'variety',
-                y = 'petal.length',
-                palette = colors,
-                estimator = mean)
-            st.pyplot()
+                colors = sns.color_palette("hls", 8)
+                sns.set(style="darkgrid")
+                ax, fig = plt.subplots(figsize= [10,7])
+                bar_fig = sns.barplot(
+                    data = iris,
+                    x = 'variety',
+                    y = 'petal.length',
+                    palette = colors,
+                    estimator = mean)
+                st.pyplot()
 
-            st.markdown('<p class="font">Customized Grouped Barplots With Seaborn</p>', unsafe_allow_html=True)
+                st.markdown('<p class="font">Customized Grouped Barplots With Seaborn</p>', unsafe_allow_html=True)
 
             
             # Horizontal Group Bar Chart Petal Length Vs Petal Width
 
-            hbar_code = '''
-            # Import Libraries
+                hbar_code = '''
+# Import Libraries
 import pandas as pd
 import seaborn as sns
 
@@ -891,46 +1293,268 @@ plt.legend()
 # Show Plot
 plt.show()   
 '''
-            st.code(hbar_code, language='python')
+                st.code(hbar_code, language='python')
 
-            grouped_iris = iris.groupby('variety').mean()
-            sns.set(style="darkgrid")
-            barWidth = 0.3
+                grouped_iris = iris.groupby('variety').mean()
+                sns.set(style="darkgrid")
+                barWidth = 0.3
 
-            # height of petal length bars
-            petal_length_bars = grouped_iris['petal.length'].tolist()
+                # height of petal length bars
+                petal_length_bars = grouped_iris['petal.length'].tolist()
 
-            # height of petal width bars
-            petal_width_bars = grouped_iris['petal.width'].tolist()
+                # height of petal width bars
+                petal_width_bars = grouped_iris['petal.width'].tolist()
 
-            # List of Grouped Variety
-            petal_variety = grouped_iris.index.tolist()
+                # List of Grouped Variety
+                petal_variety = grouped_iris.index.tolist()
 
 
-            # The x position of bars
-            r1 = np.arange(len(petal_length_bars))
-            r2 = [x + barWidth for x in r1]
+                # The x position of bars
+                r1 = np.arange(len(petal_length_bars))
+                r2 = [x + barWidth for x in r1]
 
-            # Create blue bars
-            plt.bar(r1, petal_length_bars, width = barWidth, color = 'blue', edgecolor = 'black', capsize=7, label='petal length', alpha = 0.4)
+                # Create blue bars
+                plt.bar(r1, petal_length_bars, width = barWidth, color = 'blue', edgecolor = 'black', capsize=7, label='petal length', alpha = 0.4)
 
-            # Create cyan bars
-            plt.bar(r2, petal_width_bars, width = barWidth, color = 'cyan', edgecolor = 'black', capsize=7, label='petal width', alpha = 0.4)
+                # Create cyan bars
+                plt.bar(r2, petal_width_bars, width = barWidth, color = 'cyan', edgecolor = 'black', capsize=7, label='petal width', alpha = 0.4)
 
-            # general layout
-            plt.xticks([r + barWidth for r in range(len(petal_length_bars))], petal_variety)
-            plt.ylabel('height')
-            plt.title('Mean Size Comparison Between Petal Length Vs Petal Width Between Iris Species')
-            plt.legend()
-            
-            # Show graphic
-            st.pyplot()
+                # general layout
+                plt.xticks([r + barWidth for r in range(len(petal_length_bars))], petal_variety)
+                plt.ylabel('height')
+                plt.title('Mean Size Comparison Between Petal Length Vs Petal Width Between Iris Species')
+                plt.legend()
+                
+                # Show graphic
+                st.pyplot()
 
-        if choose_py == "Radar Plot":
-            st.markdown('<p class="font">Radar Plots Using Seaborn</p>', unsafe_allow_html=True)
+            if choose_ranking == 'Pie Charts':
+                st.markdown('<p class="font">Pie Charts</p>', unsafe_allow_html=True)
 
-            radarplot = '''
-            # Import Libraries
+                pie_code = '''
+# Import Libraries
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Import dataset
+iris = pd.read_csv('iris.csv')
+
+# Aggregate by Variety 
+iris_pie = iris.groupby(by = 'variety').agg(avg_petal_length = ('petal.length', np.mean))
+
+# Creating Lists of Index and Values
+iris_mean_petal_length = iris_pie['avg_petal_length'].to_list()
+pie_labels = iris_pie.index.to_list()
+
+# Creating Explosion List For Expanding Largest Pie Plot
+pie_label_size = len(pie_labels)
+explode_list = []
+for i in range(0, pie_label_size):
+    explode_list.append(0.02)
+max_value = max(iris_mean_petal_length)
+max_value_index = iris_mean_petal_length.index(max_value)
+explode_list[max_value_index] = 0.04
+
+# Creating Plot
+colors = sns.color_palette("hls",8)
+plt.pie(
+    iris_mean_petal_length, 
+    labels = pie_labels,
+    colors= colors,
+    autopct= '%0.0f%%', 
+    explode= explode_list,
+    shadow = False,
+    startangle= 90,
+    textprops= {'color': 'Black', 'fontsize':50},
+    wedgeprops = {'linewidth':6},
+    center = (0.1,0.1),
+    rotatelabels= True
+)
+plt.rcParams["figure.figsize"] = [25,25]
+plt.show()
+'''
+                st.code(pie_code, language='python')
+
+                iris_pie = iris.groupby(by = 'variety').agg(avg_petal_length = ('petal.length', np.mean))
+                iris_mean_petal_length = iris_pie['avg_petal_length'].to_list()
+                pie_labels = iris_pie.index.to_list()
+
+                colors = sns.color_palette("hls",8)
+
+                pie_label_size = len(pie_labels)
+
+                explode_list = []
+                for i in range(0, pie_label_size):
+                    explode_list.append(0.02)
+
+                max_value = max(iris_mean_petal_length)
+                max_value_index = iris_mean_petal_length.index(max_value)
+                explode_list[max_value_index] = 0.04
+
+                plt.pie(
+                    iris_mean_petal_length, 
+                    labels = pie_labels,
+                    colors= colors,
+                    autopct= '%0.0f%%', 
+                    explode= explode_list,
+                    shadow = False,
+                    startangle= 90,
+                    textprops= {'color': 'Black', 'fontsize':25},
+                    wedgeprops = {'linewidth':6},
+                    center = (0.1,0.1),
+                    rotatelabels= True
+                )
+
+                plt.rcParams["figure.figsize"] = [25,25]
+                st.pyplot()
+
+            if choose_ranking == 'Lollipops':
+                st.markdown('<p class="font">Lollipops</p>', unsafe_allow_html=True)
+                bar_code = '''
+# Import Libraries
+import pandas as pd
+import seaborn as sns
+
+# Import dataset
+iris = pd.read_csv('iris.csv')
+
+# Aggregate by Variety and Fidning range of Dataframe
+top_petal_length = iris.groupby(by=['variety']).mean()
+my_range = range(0,len(top_petal_length))
+
+# Initialize Plot
+fig = plt.figure(figsize=(10,7))
+
+# Creating Stems
+plt.stem(top_petal_length['petal.length'])
+plt.xticks(my_range, top_petal_length.index)
+
+# Label Plot
+plt.xlabel('Variety', fontsize=20)
+plt.ylabel('Mean Petal Length',fontsize=20)
+plt.title("Average Petal Length By Iris Variety", fontsize=20, x=0.5,y=1.02)   
+'''
+
+
+                st.code(bar_code, language='python')
+
+                
+
+                top_petal_length = iris.groupby(by=['variety']).mean()
+                my_range = range(0,len(top_petal_length))
+
+                fig = plt.figure(figsize=(5,5))
+
+                plt.stem(top_petal_length['petal.length'])
+                plt.xticks(my_range, top_petal_length.index)
+
+                plt.xlabel('Variety', fontsize=20)
+                plt.ylabel('Mean Petal Length',fontsize=20)
+                plt.title("Average Petal Length By Iris Variety", fontsize=20, x=0.5,y=1.02)
+                st.pyplot()
+
+                st.markdown('<p class="font">Grouped Lollipop Plots</p>', unsafe_allow_html=True)
+
+                bar_code1 = '''
+# Import Libraries
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Import dataset
+iris = pd.read_csv('iris.csv')
+
+# Aggregate by Variety and Fidning range of Dataframe
+mean_iris = iris.groupby(by=['variety']).mean()
+my_range = range(0,len(mean_iris))
+
+# Initialize Plot
+fig = plt.figure(figsize=(10,7))
+
+# Creating Stems
+plt.hlines(y=my_range, xmin=top_petal_length['petal.length'], xmax=top_petal_length['sepal.width'], color='grey', alpha=0.4)
+plt.scatter(top_petal_length['petal.length'], my_range, color='skyblue', alpha=1, label='Petal Length')
+plt.scatter(top_petal_length['sepal.width'], my_range, color='green', alpha=0.4 , label='Sepal Length')
+plt.legend()
+
+# Label Plot
+plt.yticks(my_range, top_petal_length.index)
+plt.title("Mean Difference of Sepal Length Compared to Petal Length In Iris Dataset", loc='left')
+plt.xlabel('Length')
+plt.ylabel('Variety')
+'''
+
+
+                st.code(bar_code1, language='python')
+                fig1 = plt.figure(figsize=(5,5))
+                plt.hlines(y=my_range, xmin=top_petal_length['petal.length'], xmax=top_petal_length['sepal.width'], color='grey', alpha=0.4)
+                plt.scatter(top_petal_length['petal.length'], my_range, color='skyblue', alpha=1, label='Petal Length')
+                plt.scatter(top_petal_length['sepal.width'], my_range, color='green', alpha=0.4 , label='Sepal Length')
+                plt.legend()
+
+                plt.yticks(my_range, top_petal_length.index)
+                plt.title("Mean Difference of Sepal Length Compared to Petal Length In Iris Dataset", loc='left')
+                plt.xlabel('Length')
+                plt.ylabel('Variety')
+
+                st.pyplot()
+
+            if choose_ranking == 'Tree Maps':
+                st.markdown('<p class="font">Tree Maps</p>', unsafe_allow_html=True)
+                tree_code = '''
+# Import Libraries
+import pandas as pd
+import seaborn as sns
+import matplotlib
+import squarify
+
+# Import dataset
+iris = pd.read_csv('iris.csv')
+
+# Aggregate by Variety 
+iris_tree = iris.groupby(by = 'variety').agg(avg_petal_length = ('petal.length', np.mean))
+
+# Creating Color Scheme Based On Values
+color_map = matplotlib.cm.Blues
+min_value = min(iris_tree['avg_petal_length'])
+max_value = max(iris_tree['avg_petal_length'])
+norm = matplotlib.colors.Normalize(vmin = min_value, vmax= max_value)
+colors = [color_map(norm(value)) for value in iris_tree['avg_petal_length']]
+
+squarify.plot(
+    sizes=iris_tree['avg_petal_length'],
+    label= iris_tree.index,
+    alpha = 0.8,
+    color = colors,
+    pad = True,
+    text_kwargs={'fontsize':25, 'fontname':"Times New Roman Bold",'weight':'bold'})
+plt.axis('off')
+plt.show()
+'''
+
+
+                st.code(tree_code, language='python')
+
+
+                import matplotlib
+                import squarify
+                iris_pie = iris.groupby(by = 'variety').agg(avg_petal_length = ('petal.length', np.mean))
+                # color palette
+                color_map = matplotlib.cm.Blues
+                min_value = min(iris_pie['avg_petal_length'])
+                max_value = max(iris_pie['avg_petal_length'])
+                norm = matplotlib.colors.Normalize(vmin = min_value, vmax= max_value)
+                colors = [color_map(norm(value)) for value in iris_pie['avg_petal_length']]
+
+                squarify.plot(sizes=iris_pie['avg_petal_length'], label= iris_pie.index, alpha = 0.8, color = colors, pad = True, text_kwargs={'fontsize':25, 'fontname':"Times New Roman Bold",'weight':'bold'})
+                plt.axis('off')
+                st.pyplot()
+
+            if choose_ranking == 'Radar/Polar Plots':
+                st.markdown('<p class="font">Radar/Polar Plots</p>', unsafe_allow_html=True)
+                radarplot = '''
+# Import Libraries
 import pandas as pd
 import seaborn as sns
 from matplotlib.lines import Line2D
@@ -954,8 +1578,8 @@ iris_radar = (
     .reset_index()
 )
 '''
-            radar_plot = '''
-            # Background Colors
+                radar_plot = '''
+# Background Colors
 BG_WHITE = "#fbf9f4"
 BLUE = "#2a475e"
 GREY70 = "#b3b3b3"
@@ -1089,450 +1713,559 @@ fig.suptitle(
 fig.show()
 '''
             
-            st.code(radarplot, language='python')
-            st.code(radar_plot, language='python')
+                st.code(radarplot, language='python')
+                st.code(radar_plot, language='python')
 
-            def rescale(x):
-                return (x-np.min(x))/np.ptp(x)
+                def rescale(x):
+                    return (x-np.min(x))/np.ptp(x)
 
-            iris_radar = (
-                iris.groupby('variety').agg(
-                    avg_petal_length = ('petal.length', np.mean),
-                    avg_petal_width = ('petal.width', np.mean),
-                    avg_sepal_length = ('sepal.length', np.mean),
-                    avg_sepal_width = ('sepal.width', np.mean)
+                iris_radar = (
+                    iris.groupby('variety').agg(
+                        avg_petal_length = ('petal.length', np.mean),
+                        avg_petal_width = ('petal.width', np.mean),
+                        avg_sepal_length = ('sepal.length', np.mean),
+                        avg_sepal_width = ('sepal.width', np.mean)
+                    )
+                    .apply(lambda x: rescale(x))
+                    .reset_index()
                 )
-                .apply(lambda x: rescale(x))
-                .reset_index()
-            )
 
-            BG_WHITE = "#fbf9f4"
-            BLUE = "#2a475e"
-            GREY70 = "#b3b3b3"
-            GREY_LIGHT = "#f2efe8"
-            COLORS = ["#FF5A5F", "#FFB400", "#007A87"]
+                BG_WHITE = "#fbf9f4"
+                BLUE = "#2a475e"
+                GREY70 = "#b3b3b3"
+                GREY_LIGHT = "#f2efe8"
+                COLORS = ["#FF5A5F", "#FFB400", "#007A87"]
 
-            # The three species of iris
-            SPECIES = iris_radar["variety"].values.tolist()
+                # The three species of iris
+                SPECIES = iris_radar["variety"].values.tolist()
 
-            # The four variables in the plot
-            VARIABLES = iris_radar.columns.tolist()[1:]
-            VARIABLES_N = len(VARIABLES)
+                # The four variables in the plot
+                VARIABLES = iris_radar.columns.tolist()[1:]
+                VARIABLES_N = len(VARIABLES)
 
-            # The angles at which the values of the numeric variables are placed
-            ANGLES = [n / VARIABLES_N * 2 * np.pi for n in range(VARIABLES_N)]
-            ANGLES += ANGLES[:1]
+                # The angles at which the values of the numeric variables are placed
+                ANGLES = [n / VARIABLES_N * 2 * np.pi for n in range(VARIABLES_N)]
+                ANGLES += ANGLES[:1]
 
-            # Padding used to customize the location of the tick labels
-            X_VERTICAL_TICK_PADDING = 5
-            X_HORIZONTAL_TICK_PADDING = 50    
+                # Padding used to customize the location of the tick labels
+                X_VERTICAL_TICK_PADDING = 5
+                X_HORIZONTAL_TICK_PADDING = 50    
 
-            # Angle values going from 0 to 2*pi
-            HANGLES = np.linspace(0, 2 * np.pi)
+                # Angle values going from 0 to 2*pi
+                HANGLES = np.linspace(0, 2 * np.pi)
 
-            # Used for the equivalent of horizontal lines in cartesian coordinates plots 
-            # The last one is also used to add a fill which acts a background color.
-            H0 = np.zeros(len(HANGLES))
-            H1 = np.ones(len(HANGLES)) * 0.5
-            H2 = np.ones(len(HANGLES))
+                # Used for the equivalent of horizontal lines in cartesian coordinates plots 
+                # The last one is also used to add a fill which acts a background color.
+                H0 = np.zeros(len(HANGLES))
+                H1 = np.ones(len(HANGLES)) * 0.5
+                H2 = np.ones(len(HANGLES))
 
-            # Initialize layout ----------------------------------------------
-            fig = plt.figure(figsize=(14, 10))
-            ax = fig.add_subplot(111, polar=True)
+                # Initialize layout ----------------------------------------------
+                fig = plt.figure(figsize=(14, 10))
+                ax = fig.add_subplot(111, polar=True)
 
-            fig.patch.set_facecolor(BG_WHITE)
-            ax.set_facecolor(BG_WHITE)
+                fig.patch.set_facecolor(BG_WHITE)
+                ax.set_facecolor(BG_WHITE)
 
-            # Rotate the "" 0 degrees on top. 
-            # There it where the first variable, avg_bill_length, will go.
-            ax.set_theta_offset(np.pi / 2)
-            ax.set_theta_direction(-1)
+                # Rotate the "" 0 degrees on top. 
+                # There it where the first variable, avg_bill_length, will go.
+                ax.set_theta_offset(np.pi / 2)
+                ax.set_theta_direction(-1)
 
-            # Setting lower limit to negative value reduces overlap
-            # for values that are 0 (the minimums)
-            ax.set_ylim(-0.1, 1.05)
+                # Setting lower limit to negative value reduces overlap
+                # for values that are 0 (the minimums)
+                ax.set_ylim(-0.1, 1.05)
 
-            # Plot lines and dots --------------------------------------------
-            for idx, species in enumerate(SPECIES):
-                values = iris_radar.iloc[idx].drop("variety").values.tolist()
-                values += values[:1]
-                ax.plot(ANGLES, values, c=COLORS[idx], linewidth=4, label=species)
-                ax.scatter(ANGLES, values, s=160, c=COLORS[idx], zorder=10)
+                # Plot lines and dots --------------------------------------------
+                for idx, species in enumerate(SPECIES):
+                    values = iris_radar.iloc[idx].drop("variety").values.tolist()
+                    values += values[:1]
+                    ax.plot(ANGLES, values, c=COLORS[idx], linewidth=4, label=species)
+                    ax.scatter(ANGLES, values, s=160, c=COLORS[idx], zorder=10)
 
-            # Set values for the angular axis (x)
-            ax.set_xticks(ANGLES[:-1])
-            ax.set_xticklabels(VARIABLES, size=14)
+                # Set values for the angular axis (x)
+                ax.set_xticks(ANGLES[:-1])
+                ax.set_xticklabels(VARIABLES, size=14)
 
-            # Remove lines for radial axis (y)
-            ax.set_yticks([])
-            ax.yaxis.grid(False)
-            ax.xaxis.grid(False)
+                # Remove lines for radial axis (y)
+                ax.set_yticks([])
+                ax.yaxis.grid(False)
+                ax.xaxis.grid(False)
 
-            # Remove spines
-            ax.spines["start"].set_color("none")
-            ax.spines["polar"].set_color("none")
+                # Remove spines
+                ax.spines["start"].set_color("none")
+                ax.spines["polar"].set_color("none")
 
-            # Add custom lines for radial axis (y) at 0, 0.5 and 1.
-            ax.plot(HANGLES, H0, ls=(0, (6, 6)), c=GREY70)
-            ax.plot(HANGLES, H1, ls=(0, (6, 6)), c=COLORS[2])
-            ax.plot(HANGLES, H2, ls=(0, (6, 6)), c=GREY70)
+                # Add custom lines for radial axis (y) at 0, 0.5 and 1.
+                ax.plot(HANGLES, H0, ls=(0, (6, 6)), c=GREY70)
+                ax.plot(HANGLES, H1, ls=(0, (6, 6)), c=COLORS[2])
+                ax.plot(HANGLES, H2, ls=(0, (6, 6)), c=GREY70)
 
-            # Now fill the area of the circle with radius 1.
-            # This create the effect of gray background.
-            ax.fill(HANGLES, H2, GREY_LIGHT)
+                # Now fill the area of the circle with radius 1.
+                # This create the effect of gray background.
+                ax.fill(HANGLES, H2, GREY_LIGHT)
 
-            # Custom guides for angular axis (x).
-            # These four lines do not cross the y = 0 value, so they go from 
-            # the innermost circle, to the outermost circle with radius 1.
-            ax.plot([0, 0], [0, 1], lw=2, c=GREY70)
-            ax.plot([np.pi, np.pi], [0, 1], lw=2, c=GREY70)
-            ax.plot([np.pi / 2, np.pi / 2], [0, 1], lw=2, c=GREY70)
-            ax.plot([-np.pi / 2, -np.pi / 2], [0, 1], lw=2, c=GREY70)
+                # Custom guides for angular axis (x).
+                # These four lines do not cross the y = 0 value, so they go from 
+                # the innermost circle, to the outermost circle with radius 1.
+                ax.plot([0, 0], [0, 1], lw=2, c=GREY70)
+                ax.plot([np.pi, np.pi], [0, 1], lw=2, c=GREY70)
+                ax.plot([np.pi / 2, np.pi / 2], [0, 1], lw=2, c=GREY70)
+                ax.plot([-np.pi / 2, -np.pi / 2], [0, 1], lw=2, c=GREY70)
 
-            # Add levels -----------------------------------------------------
-            # These labels indicate the values of the radial axis
-            PAD = 0.05
-            ax.text(-0.4, 0 + PAD, "0", size=16, fontname="Roboto")
-            ax.text(-0.4, 0.5 + PAD, "0.5", size=16, fontname="Roboto")
-            ax.text(-0.4, 1 + PAD, "1", size=16, fontname="Roboto")
-            ax.fill(ANGLES, values, 'b', alpha=0.1)
+                # Add levels -----------------------------------------------------
+                # These labels indicate the values of the radial axis
+                PAD = 0.05
+                ax.text(-0.4, 0 + PAD, "0", size=16, fontname="Roboto")
+                ax.text(-0.4, 0.5 + PAD, "0.5", size=16, fontname="Roboto")
+                ax.text(-0.4, 1 + PAD, "1", size=16, fontname="Roboto")
+                ax.fill(ANGLES, values, 'b', alpha=0.1)
 
-            from matplotlib.lines import Line2D
-            handles = [
-                Line2D(
-                    [], [], 
-                    c=color, 
-                    lw=3, 
-                    marker="o", 
-                    markersize=8, 
-                    label=species
+                from matplotlib.lines import Line2D
+                handles = [
+                    Line2D(
+                        [], [], 
+                        c=color, 
+                        lw=3, 
+                        marker="o", 
+                        markersize=8, 
+                        label=species
+                    )
+                    for species, color in zip(SPECIES, COLORS)
+                ]
+
+                legend = ax.legend(
+                    handles=handles,
+                    loc=(1, 0),       # bottom-right
+                    labelspacing=1.5, # add space between labels
+                    frameon=False     # don't put a frame
                 )
-                for species, color in zip(SPECIES, COLORS)
-            ]
 
-            legend = ax.legend(
-                handles=handles,
-                loc=(1, 0),       # bottom-right
-                labelspacing=1.5, # add space between labels
-                frameon=False     # don't put a frame
-            )
+                # Iterate through text elements and change their properties
+                for text in legend.get_texts():
+                    text.set_fontname("Sans Serif") # Change default font 
+                    text.set_fontsize(16)       # Change default font size
 
-            # Iterate through text elements and change their properties
-            for text in legend.get_texts():
-                text.set_fontname("Sans Serif") # Change default font 
-                text.set_fontsize(16)       # Change default font size
+                # Adjust tick label positions ------------------------------------
+                XTICKS = ax.xaxis.get_major_ticks()
+                for tick in XTICKS[0::2]:
+                    tick.set_pad(X_VERTICAL_TICK_PADDING)
+                    
+                for tick in XTICKS[1::2]:
+                    tick.set_pad(X_HORIZONTAL_TICK_PADDING)
 
-            # Adjust tick label positions ------------------------------------
-            XTICKS = ax.xaxis.get_major_ticks()
-            for tick in XTICKS[0::2]:
-                tick.set_pad(X_VERTICAL_TICK_PADDING)
+                # Add title ------------------------------------------------------
+                fig.suptitle(
+                    "Radar Plot of Iris Species",
+                    x = 0.1,
+                    y = 1,
+                    ha="left",
+                    fontsize=32,
+                    fontname="Roboto",
+                    color=BLUE,
+                    weight="bold",    
+                )
+
+                st.pyplot()
+
                 
-            for tick in XTICKS[1::2]:
-                tick.set_pad(X_HORIZONTAL_TICK_PADDING)
-
-            # Add title ------------------------------------------------------
-            fig.suptitle(
-                "Radar Plot of Iris Species",
-                x = 0.1,
-                y = 1,
-                ha="left",
-                fontsize=32,
-                fontname="Roboto",
-                color=BLUE,
-                weight="bold",    
-            )
-
-            st.pyplot()
 
 
-        if choose_py == 'Scatterplot':
-            st.markdown('<p class="font">Scatterplots Using Seaborn</p>', unsafe_allow_html=True)
-            scatter = '''
-            # Import Libraries
-import pandas as pd
-import seaborn as sns
+        if grouped_py == "Evolution":
+            st.header('Evolution')
+            choose_evo = option_menu(None,["Line Plots","Area Plots"],
+                         icons=['graph-up-arrow', 'graph-up-arrow'],
+                         styles={
+        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#ddbea9"},
+        }
+        )
 
-# Import dataset
-texas_data = pd.read_csv('csv_files/texas3.csv')
-
-# Scatterplot
-sns.set(style="white", color_codes=True)
-sns.jointplot(x=texas_data["y"],
-    y=-texas_data["x"],
-    kind='scatter',
-    s=200,
-    color='m',
-    edgecolor="skyblue",
-    linewidth=2)
-
-plt.show()
-
-# Hex Plot
-sns.set(style="white", color_codes=True)
-sns.jointplot(x=texas_data["y"],
-    y=-texas_data["x"],
-    kind='hex',
-    marginal_kws=dict(bins=30, fill=True))
-
-plt.show()
-
-# Kernal Density Estimation
-sns.set(style="white", color_codes=True)
-sns.jointplot(x=texas_data["y"],
-    y=-texas_data["x"],
-    kind='kde',
-    color="skyblue")
-
-plt.show()
-'''
-            st.code(scatter, language='python')
-
-            # ----- Texas Scatter Plot ----- #      
-            texas_data = pd.read_csv('csv_files/texas3.csv')
-            home_col1, home_col2, home_col3 = st.columns(3)
-            with home_col1:
-                st.subheader('Scatterplot')
-                scatter_plot(texas_data, 'x', 'y')
-            with home_col2:
-                st.subheader('Hex Plot')
-                hex_plot(texas_data, 'x', 'y')
-            with home_col3:
-                st.subheader('KDE Plot')
-                kde_plot(texas_data, 'x', 'y')
-                        
-        
-
-        if choose_py == "Lollipop":
-            st.markdown('<p class="font">Lollipop Plots Using Seaborn</p>', unsafe_allow_html=True)
-
-            bar_code = '''
-            # Import Libraries
-import pandas as pd
-import seaborn as sns
-
-# Import dataset
-iris = pd.read_csv('iris.csv')
-
-# Aggregate by Variety and Fidning range of Dataframe
-top_petal_length = iris.groupby(by=['variety']).mean()
-my_range = range(0,len(top_petal_length))
-
-# Initialize Plot
-fig = plt.figure(figsize=(10,7))
-
-# Creating Stems
-plt.stem(top_petal_length['petal.length'])
-plt.xticks(my_range, top_petal_length.index)
-
-# Label Plot
-plt.xlabel('Variety', fontsize=20)
-plt.ylabel('Mean Petal Length',fontsize=20)
-plt.title("Average Petal Length By Iris Variety", fontsize=20, x=0.5,y=1.02)   
-'''
-
-
-            st.code(bar_code, language='python')
-
-            
-
-            top_petal_length = iris.groupby(by=['variety']).mean()
-            my_range = range(0,len(top_petal_length))
-
-            fig = plt.figure(figsize=(5,5))
-
-            plt.stem(top_petal_length['petal.length'])
-            plt.xticks(my_range, top_petal_length.index)
-
-            plt.xlabel('Variety', fontsize=20)
-            plt.ylabel('Mean Petal Length',fontsize=20)
-            plt.title("Average Petal Length By Iris Variety", fontsize=20, x=0.5,y=1.02)
-            st.pyplot()
-
-            st.markdown('<p class="font">Lollipop Difference Plots With Seaborn</p>', unsafe_allow_html=True)
-
-            bar_code1 = '''
-            # Import Libraries
-import pandas as pd
+            if choose_evo == 'Line Plots':
+                st.markdown('<p class="font">Line Plots</p>', unsafe_allow_html=True)
+                line_plot = '''
+# Import libraries and dataset
 import seaborn as sns
 import matplotlib.pyplot as plt
+import pandas as pd
 
-# Import dataset
-iris = pd.read_csv('iris.csv')
+df = sns.load_dataset("mpg")
 
-# Aggregate by Variety and Fidning range of Dataframe
-mean_iris = iris.groupby(by=['variety']).mean()
-my_range = range(0,len(mean_iris))
+# Data Cleaning
+df['model_year'] = df['model_year'] + 1900 # Correcting Date
 
-# Initialize Plot
-fig = plt.figure(figsize=(10,7))
+europe = df[df['origin'] == 'europe']
+asia = df[df['origin'] == 'japan']
+usa = df[df['origin'] == 'usa']
 
-# Creating Stems
-plt.hlines(y=my_range, xmin=top_petal_length['petal.length'], xmax=top_petal_length['sepal.width'], color='grey', alpha=0.4)
-plt.scatter(top_petal_length['petal.length'], my_range, color='skyblue', alpha=1, label='Petal Length')
-plt.scatter(top_petal_length['sepal.width'], my_range, color='green', alpha=0.4 , label='Sepal Length')
-plt.legend()
+asia = asia.groupby(by=['model_year']).mean().round(2)
+usa = usa.groupby(by=['model_year']).mean().round(2)
+europe = europe.groupby(by=['model_year']).mean().round(2)
+asia_mpg = asia['mpg'].to_numpy()
+usa_mpg = usa['mpg'].to_numpy()
+europe_mpg = europe['mpg'].to_numpy()
 
-# Label Plot
-plt.yticks(my_range, top_petal_length.index)
-plt.title("Mean Difference of Sepal Length Compared to Petal Length In Iris Dataset", loc='left')
-plt.xlabel('Length')
-plt.ylabel('Variety')
+time = df['model_year'].unique()
+
+# Initializing Plot
+fig, ax = plt.subplots(figsize=(14, 10))
+
+# Plot lines
+ax.plot(time, asia_mpg, color="green")
+ax.plot(time, europe_mpg, color="red")
+ax.plot(time, usa_mpg, color="blue")
+
+# Fill areas
+ax.fill_between(
+    time, asia_mpg, europe_mpg, where=(asia_mpg > europe_mpg), 
+    interpolate=True, color="green", alpha=0.25, 
+    label="Asia MPG > Europe MPG")
+
+ax.fill_between(
+    time, asia_mpg, europe_mpg, where=(asia_mpg <= europe_mpg), 
+    interpolate=True, color="red", alpha=0.25,
+    label="Asia MPG <= Europe MPG")
+
+ax.legend()
 '''
 
 
-            st.code(bar_code1, language='python')
-            fig1 = plt.figure(figsize=(5,5))
-            plt.hlines(y=my_range, xmin=top_petal_length['petal.length'], xmax=top_petal_length['sepal.width'], color='grey', alpha=0.4)
-            plt.scatter(top_petal_length['petal.length'], my_range, color='skyblue', alpha=1, label='Petal Length')
-            plt.scatter(top_petal_length['sepal.width'], my_range, color='green', alpha=0.4 , label='Sepal Length')
-            plt.legend()
+                df = sns.load_dataset("mpg")
 
-            plt.yticks(my_range, top_petal_length.index)
-            plt.title("Mean Difference of Sepal Length Compared to Petal Length In Iris Dataset", loc='left')
-            plt.xlabel('Length')
-            plt.ylabel('Variety')
+                # Data Cleaning
+                df['model_year'] = df['model_year'] + 1900 # Correcting Date
 
-            st.pyplot()
+                europe = df[df['origin'] == 'europe']
+                asia = df[df['origin'] == 'japan']
+                usa = df[df['origin'] == 'usa']
+
+                asia = asia.groupby(by=['model_year']).mean().round(2)
+                usa = usa.groupby(by=['model_year']).mean().round(2)
+                europe = europe.groupby(by=['model_year']).mean().round(2)
+                asia_mpg = asia['mpg'].to_numpy()
+                usa_mpg = usa['mpg'].to_numpy()
+                europe_mpg = europe['mpg'].to_numpy()
+
+                time = df['model_year'].unique()
+
+                # Initializing Plot
+                fig, ax = plt.subplots(figsize=(14, 10))
+
+                # Plot lines
+                ax.plot(time, asia_mpg, color="green")
+                ax.plot(time, europe_mpg, color="red")
+                ax.plot(time, usa_mpg, color="blue")
+
+                # Fill areas
+                ax.fill_between(
+                    time, asia_mpg, europe_mpg, where=(asia_mpg > europe_mpg), 
+                    interpolate=True, color="green", alpha=0.25, 
+                    label="Asia MPG > Europe MPG")
+
+                ax.fill_between(
+                    time, asia_mpg, europe_mpg, where=(asia_mpg <= europe_mpg), 
+                    interpolate=True, color="red", alpha=0.25,
+                    label="Asia MPG <= Europe MPG")
+
+                ax.legend()
+                st.code(line_plot, language='python')
+                st.pyplot()
 
 
-
-        if choose_py == "Pie Plot":
-            st.markdown('<p class="font">Pie Plots Using Seaborn</p>', unsafe_allow_html=True)
-
-            pie_code = '''
-            # Import Libraries
-import pandas as pd
+            if choose_evo == 'Area Plots':
+                st.markdown('<p class="font">Area Plots</p>', unsafe_allow_html=True)
+                line_plot = '''
+# Import libraries and dataset
 import seaborn as sns
 import matplotlib.pyplot as plt
-
-# Import dataset
-iris = pd.read_csv('iris.csv')
-
-# Aggregate by Variety 
-iris_pie = iris.groupby(by = 'variety').agg(avg_petal_length = ('petal.length', np.mean))
-
-# Creating Lists of Index and Values
-iris_mean_petal_length = iris_pie['avg_petal_length'].to_list()
-pie_labels = iris_pie.index.to_list()
-
-# Creating Explosion List For Expanding Largest Pie Plot
-pie_label_size = len(pie_labels)
-explode_list = []
-for i in range(0, pie_label_size):
-    explode_list.append(0.02)
-max_value = max(iris_mean_petal_length)
-max_value_index = iris_mean_petal_length.index(max_value)
-explode_list[max_value_index] = 0.04
-
-# Creating Plot
-colors = sns.color_palette("hls",8)
-plt.pie(
-    iris_mean_petal_length, 
-    labels = pie_labels,
-    colors= colors,
-    autopct= '%0.0f%%', 
-    explode= explode_list,
-    shadow = False,
-    startangle= 90,
-    textprops= {'color': 'Black', 'fontsize':50},
-    wedgeprops = {'linewidth':6},
-    center = (0.1,0.1),
-    rotatelabels= True
-)
-plt.rcParams["figure.figsize"] = [25,25]
-plt.show()
-'''
-
-
-            st.code(pie_code, language='python')
-
-            iris_pie = iris.groupby(by = 'variety').agg(avg_petal_length = ('petal.length', np.mean))
-            iris_mean_petal_length = iris_pie['avg_petal_length'].to_list()
-            pie_labels = iris_pie.index.to_list()
-
-            colors = sns.color_palette("hls",8)
-
-            pie_label_size = len(pie_labels)
-
-            explode_list = []
-            for i in range(0, pie_label_size):
-                explode_list.append(0.02)
-
-            max_value = max(iris_mean_petal_length)
-            max_value_index = iris_mean_petal_length.index(max_value)
-            explode_list[max_value_index] = 0.04
-
-            plt.pie(
-                iris_mean_petal_length, 
-                labels = pie_labels,
-                colors= colors,
-                autopct= '%0.0f%%', 
-                explode= explode_list,
-                shadow = False,
-                startangle= 90,
-                textprops= {'color': 'Black', 'fontsize':25},
-                wedgeprops = {'linewidth':6},
-                center = (0.1,0.1),
-                rotatelabels= True
-            )
-
-            plt.rcParams["figure.figsize"] = [25,25]
-            st.pyplot()
-
-        if choose_py == "Tree Map":
-            st.markdown('<p class="font">Tree Maps Using Seaborn</p>', unsafe_allow_html=True)
-            tree_code = '''
-            # Import Libraries
 import pandas as pd
-import seaborn as sns
-import matplotlib
-import squarify
 
-# Import dataset
-iris = pd.read_csv('iris.csv')
+df = sns.load_dataset("flights")
 
-# Aggregate by Variety 
-iris_tree = iris.groupby(by = 'variety').agg(avg_petal_length = ('petal.length', np.mean))
+# Initialize Plot and Grid
+ax = sns.FacetGrid(df, 
+    col = 'month',
+    hue = 'month',
+    col_wrap = 4)
 
-# Creating Color Scheme Based On Values
-color_map = matplotlib.cm.Blues
-min_value = min(iris_tree['avg_petal_length'])
-max_value = max(iris_tree['avg_petal_length'])
-norm = matplotlib.colors.Normalize(vmin = min_value, vmax= max_value)
-colors = [color_map(norm(value)) for value in iris_tree['avg_petal_length']]
+# Add Line Plot With Area Plot Function
+ax = ax.map(plt.plot, 'year', 'passengers')
 
-squarify.plot(
-    sizes=iris_tree['avg_petal_length'],
-    label= iris_tree.index,
-    alpha = 0.8,
-    color = colors,
-    pad = True,
-    text_kwargs={'fontsize':25, 'fontname':"Times New Roman Bold",'weight':'bold'})
-plt.axis('off')
+# Fill Area
+ax = ax.map(plt.fill_between, 'year', 'passengers', alpha = 0.2).set_titles("{col_name} month")
+
+# Control Title of Each Facet
+ax = ax.set_titles("{col_name}")
+
+# Add Overall Plot Title
+plt.subplots_adjust(top = 0.92)
+ax = ax.fig.suptitle("Evolution of Passengers Per Month Between 1949 And 1960")
+
 plt.show()
 '''
 
 
-            st.code(tree_code, language='python')
+                df = sns.load_dataset("flights")
+
+                # Initialize Plot and Grid
+                ax = sns.FacetGrid(df, 
+                    col = 'month',
+                    hue = 'month',
+                    col_wrap = 4)
+
+                # Add Line Plot With Area Plot Function
+                ax = ax.map(plt.plot, 'year', 'passengers')
+
+                # Fill Area
+                ax = ax.map(plt.fill_between, 'year', 'passengers', alpha = 0.2).set_titles("{col_name} month")
+
+                # Control Title of Each Facet
+                ax = ax.set_titles("{col_name}")
+
+                # Add Overall Plot Title
+                plt.subplots_adjust(top = 0.92)
+                ax = ax.fig.suptitle("Evolution of Passengers Per Month Between 1949 And 1960")
+
+                st.code(line_plot, language='python')
+                st.pyplot()
 
 
-            import matplotlib
-            import squarify
-            iris_pie = iris.groupby(by = 'variety').agg(avg_petal_length = ('petal.length', np.mean))
-            # color palette
-            color_map = matplotlib.cm.Blues
-            min_value = min(iris_pie['avg_petal_length'])
-            max_value = max(iris_pie['avg_petal_length'])
-            norm = matplotlib.colors.Normalize(vmin = min_value, vmax= max_value)
-            colors = [color_map(norm(value)) for value in iris_pie['avg_petal_length']]
 
-            squarify.plot(sizes=iris_pie['avg_petal_length'], label= iris_pie.index, alpha = 0.8, color = colors, pad = True, text_kwargs={'fontsize':25, 'fontname':"Times New Roman Bold",'weight':'bold'})
-            plt.axis('off')
-            st.pyplot()
+        if grouped_py == "Maps":
+            st.header('Maps')
+            choose_map = option_menu(None,["Choropleth","Bubble Maps"],
+                         icons=['map', 'map'],
+                         styles={
+        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#ddbea9"},
+        }
+        )
+
+            if choose_map == 'Choropleth':
+                st.markdown('<p class="font">Choropleth</p>', unsafe_allow_html=True)
+                line_plot = '''
+# Import libraries and dataset
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/
+        plotly/datasets/master/fips-unemp-16.csv",
+    dtype={"fips": str})
+                   
+# Load the county boundary coordinates
+from urllib.request import urlopen
+import json
+with urlopen(
+    'https://raw.githubusercontent.com
+        /plotly/datasets/master/geojson-counties-fips.json')
+            as response:
+    counties = json.load(response)                   
+
+# Initialize Plot and Grid
+sns.set(style="darkgrid")
+
+# Build the choropleth
+import plotly.express as px
+fig = px.choropleth(df, 
+    geojson=counties, 
+    locations='fips', 
+    color='unemp',
+    color_continuous_scale="Viridis",
+    range_color=(0, 12),
+    scope="usa",
+    labels={'unemp':'unemployment rate'})
+
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+
+# Improve the legend
+fig.update_layout(coloraxis_colorbar=dict(
+    thicknessmode="pixels", thickness=10,
+    lenmode="pixels", len=150,
+    yanchor="top", y=0.8,
+    ticks="outside", ticksuffix=" %",
+    dtick=5))
+
+fig.show()
+'''
+                st.code(line_plot, language = 'python')
+                st.image('images/chloropeth.png', use_column_width=True)
+
+            if choose_map == 'Bubble Maps':
+                st.markdown('<p class="font">Bubble Maps</p>', unsafe_allow_html=True)
+                line_plot = '''
+# Import libraries and dataset
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+data = pd.read_csv(
+    'https://raw.githubusercontent.com
+    /holtzy/The-Python-Graph-Gallery/master/static/data/TweetSurfData.csv', sep=";")
+
+# Basemap Library
+from mpl_toolkits.basemap import Basemap
+ 
+# Figure Dimension
+plt.rcParams["figure.figsize"]=14,10
+
+# Background Map
+m=Basemap(llcrnrlon=-180,
+    llcrnrlat=-65,
+    urcrnrlon=180,
+    urcrnrlat=80,
+    projection='merc')
+m.drawmapboundary(fill_color='#A6CAE0',
+    linewidth=0)
+m.fillcontinents(color='grey',
+    alpha=0.3)
+m.drawcoastlines(linewidth=0.1,
+    color="white")
+
+# Background Map
+m = Basemap(llcrnrlon=-180,
+    llcrnrlat=-65,
+    urcrnrlon=180,
+    urcrnrlat=80)
+m.drawmapboundary(fill_color='#A6CAE0',
+    linewidth=0)
+m.fillcontinents(color='grey',
+    alpha=0.3)
+m.drawcoastlines(linewidth=0.1,
+    color="white")
+
+# Colorization
+data['labels_enc'] = pd.factorize(data['homecontinent'])[0]
+ 
+# Adding Points
+m.scatter(
+    x=data['homelon'], 
+    y=data['homelat'], 
+    s=data['n']/6, 
+    alpha=0.4, 
+    c=data['labels_enc'], 
+    cmap="Set1")
+    
+# Source Data
+plt.text( -175, -62,'Data collected on twitter by @R_Graph_Gallery',
+    ha='left',
+    va='bottom',
+    size=9,
+    color='#555555')
+'''
+                st.code(line_plot, language = 'python')
+                st.image('images/bubble2.png', use_column_width=True)
 
 
+        if grouped_py == "3D Plots":
+            st.header('3D Plots')
+            choose_3d = option_menu(None,["Surface Maps"],
+                         icons=['badge-3d'],
+                         styles={
+        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#ddbea9"},
+        }
+        )
+            if choose_3d == 'Surface Maps':
+                st.markdown('<p class="font">Surface Maps</p>', unsafe_allow_html=True)
+                line_plot = '''
+# Import libraries and dataset
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+from mpl_toolkits.mplot3d import Axes3D
 
+# Data Collection
+url = 'https://raw.githubusercontent.com
+    /holtzy/The-Python-Graph-Gallery/master/static/data/volcano.csv'
+data = pd.read_csv(url)
 
+# Data Transformation
+df=data.unstack().reset_index()
+df.columns=["X","Y","Z"]
+ 
+df['X']=pd.Categorical(df['X'])
+df['X']=df['X'].cat.codes
+ 
+# Initializing Plot
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+ax.plot_trisurf(df['Y'],
+    df['X'],
+    df['Z'],
+    cmap=plt.cm.jet,
+    linewidth=0.2)
+plt.show()
+ 
+# Rotating Plot
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+surf=ax.plot_trisurf(df['Y'],
+    df['X'],
+    df['Z'],
+    cmap=plt.cm.jet,
+    linewidth=0.2)
+ax.view_init(30, 45)
+plt.show()
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+surf=ax.plot_trisurf(df['Y'],
+    df['X'],
+    df['Z'],
+    cmap=plt.cm.jet,
+    linewidth=0.2)
+ax.view_init(30, 90)
+plt.show()
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+surf=ax.plot_trisurf(df['Y'],
+    df['X'],
+    df['Z'],
+    cmap=plt.cm.jet,
+    linewidth=0.2)
+ax.view_init(30, 180)
+plt.show()
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+surf=ax.plot_trisurf(df['Y'],
+    df['X'],
+    df['Z'],
+    cmap=plt.cm.jet,
+    linewidth=0.2)
+ax.view_init(30, 270)
+plt.show()
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+surf=ax.plot_trisurf(df['Y'],
+    df['X'],
+    df['Z'],
+    cmap=plt.cm.jet,
+    linewidth=0.2)
+ax.view_init(30, 360)
+plt.show()
+'''
+                st.code(line_plot, language = 'python')
+                one, two, three = st.columns(3)
+
+                with one:
+                    st.image('images/vol1.png', use_column_width= True)
+                    st.image('images/vol2.png', use_column_width= True)
+                with two:
+                    st.image('images/vol3.png', use_column_width= True)
+                    st.image('images/vol4.png', use_column_width= True)
+                with three:
+                    st.image('images/vol5.png', use_column_width= True)
+                    st.image('images/vol6.png', use_column_width= True)
 
 
     if choose == "SQL":
