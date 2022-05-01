@@ -2735,12 +2735,12 @@ FROM Electronics;
             st.write('''
 | product_category   | brand        | product_name | price        | most_exp_product_category        |
 |--------------------|--------------|--------------|--------------|--------------|
+| Phone      | Samsung        | Galaxy Z Fold 3      | 1800      | iPhone 12 Pro Max      | 
 | Phone              | Apple        | iPhone 12 Pro Max      | 1300      | iPhone 12 Pro Max      | 
+| Phone | Samsung        | Galaxy Note 20       | 1200      | iPhone 12 Pro Max      | 
 | Phone         | Apple        | iPhone 12 Pro      | 1100      | iPhone 12 Pro Max      | 
 | Phone          | Apple        | iPhone 12      | 1000      | iPhone 12 Pro Max      | 
-| Phone      | Samsung        | Galaxy Z Fold 3      | 1800      | iPhone 12 Pro Max      | 
 | Phone | Samsung        | Galaxy Z Flip 3      | 1000      | iPhone 12 Pro Max      | 
-| Phone | Samsung        | Galaxy Note 20       | 1200      | iPhone 12 Pro Max      | 
 | Phone | Samsung        | Galaxy S21      | 900      | iPhone 12 Pro Max      |
 | ... | ...        | ...      | ...      | ...      | 
 | Headphone | Apple        | AirPods Max      | 550      | AirPods Max       |
@@ -2769,12 +2769,12 @@ FROM Electronics;
             st.write('''
 | product_category   | brand        | product_name | price        | most_exp_product_category        | least_exp_product_category        |
 |--------------------|--------------|--------------|--------------|--------------|--------------|
+| Phone      | Samsung        | Galaxy Z Fold 3      | 1800      | iPhone 12 Pro Max      | Galaxy S21      |
 | Phone              | Apple        | iPhone 12 Pro Max      | 1300      | iPhone 12 Pro Max      | Galaxy S21      |
+| Phone | Samsung        | Galaxy Note 20       | 1200      | iPhone 12 Pro Max      | Galaxy S21      |
 | Phone         | Apple        | iPhone 12 Pro      | 1100      | iPhone 12 Pro Max      | Galaxy S21      |
 | Phone          | Apple        | iPhone 12      | 1000      | iPhone 12 Pro Max      | Galaxy S21      |
-| Phone      | Samsung        | Galaxy Z Fold 3      | 1800      | iPhone 12 Pro Max      | Galaxy S21      |
 | Phone | Samsung        | Galaxy Z Flip 3      | 1000      | iPhone 12 Pro Max      | Galaxy S21      |
-| Phone | Samsung        | Galaxy Note 20       | 1200      | iPhone 12 Pro Max      | Galaxy S21      |
 | Phone | Samsung        | Galaxy S21      | 900      | iPhone 12 Pro Max      | Galaxy S21      |
 | ... | ...        | ...      | ...      | ...      | ...      |
 | Headphone | Apple        | AirPods Max      | 550      | AirPods Max       | Surface Headphones 2      |
@@ -2787,10 +2787,126 @@ FROM Electronics;
 | Laptop | Apple        | MacBook Pro 13      | 2000      | XPS 17        | MacBook Pro 13      |
 ''')
             st.subheader('Nth_Value()')
+            st.write('Write a query to display the fifth most expensive product under EACH category.')
+            nth_value = '''
+SELECT 
+    *,
+    NTH_VALUE(product_name) OVER (PARTITION BY product_category ORDER BY price DESC 
+        RANGE BEWTEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS fifth_most_exp_product
+FROM electronics;
+'''
+            st.code(nth_value, language='sql')
+            st.write('''
+| product_category   | brand        | product_name | price        | fifth_most_exp_product       | 
+|--------------------|--------------|--------------|--------------|--------------|
+| Phone      | Samsung        | Galaxy Z Fold 3      | 1800      | iPhone 12      | 
+| Phone              | Apple        | iPhone 12 Pro Max      | 1300      | iPhone 12      | 
+| Phone | Samsung        | Galaxy Note 20       | 1200      |iPhone 12      | 
+| Phone         | Apple        | iPhone 12 Pro      | 1100      | iPhone 12      | 
+| Phone          | Apple        | iPhone 12      | 1000      | iPhone 12       | 
+| Phone | Samsung        | Galaxy Z Flip 3      | 1000      | iPhone 12      | 
+| Phone | Samsung        | Galaxy S21      | 900      | iPhone 12     | 
+| ... | ...        | ...      | ...      | ...      | 
+| Headphone | Apple        | AirPods Max      | 550      | NULL    | 
+| Headphone | Sony        | WH-1000XM4      | 400      | NULL       | 
+| Headphone | Microsoft        | Surface Headphones 2      | 250      | NULL      | 
+| ... | ...        | ...      | ...      | ...       | 
+| Laptop | Dell        | XPS 17      | 2500      | NULL       | 
+| Laptop | Dell        | XPS 15      | 2300      | NULL        |
+| Laptop | Microsoft        | Surface Laptop 4      | 2100      | NULL       | 
+| Laptop | Apple        | MacBook Pro 13      | 2000      | NULL        | 
+''')
 
             st.subheader('NTILE()')
+            st.write('Write a query to segregate all the expensive phones, mid range phones and cheap phones.')
+            ntile = '''
+SELECT 
+    NTILE(3) OVER (ORDER BY price DESC) AS quartiles
+FROM electronics
+    WHERE product_category = 'Phone'            
+'''
+            st.code(ntile, language='sql')
+            st.write('''
+| product_category   | brand        | product_name | price        | quartiles       | 
+|--------------------|--------------|--------------|--------------|--------------|
+| Phone      | Samsung        | Galaxy Z Fold 3      | 1800      | 1      | 
+| Phone              | Apple        | iPhone 12 Pro Max      | 1300      | 1      | 
+| Phone | Samsung        | Galaxy Note 20       | 1200      |1      | 
+| Phone         | Apple        | iPhone 12 Pro      | 1100      | 1      | 
+| Phone          | Apple        | iPhone 12      | 1000      | 2       | 
+| Phone | Samsung        | Galaxy Z Flip 3      | 1000      | 2       | 
+| Phone | Samsung        | Galaxy S21      | 900      | 2     |
+| Phone | OnePlus        | OnePlus 9      | 800      | 3     |
+| Phone | Google        | Pixel 5      | 600      | 3     |
+| Phone | OnePlus        | OnePlus Nord      | 300      | 3     |
+''')
+
+            st.warning('NTILE() gives priority to the first bucket if quartiles cannot be evenly split.')
+
+            ntile2 = '''
+SELECT
+    product_name,
+    CASE
+        WHEN a.quartiles = 1 THEN 'Expensive'
+        WHEN a.quartiles = 2 THEN 'Mid Range'
+        WHEN a.quartiles = 3 THEN 'Cheap' 
+    END AS phone_category
+FROM
+(
+    SELECT 
+        NTILE(3) OVER (ORDER BY price DESC) AS quartiles
+    FROM electronics
+        WHERE product_category = 'Phone'    
+) a;
+'''
+            st.code(ntile2, language='sql')
+            st.write('''
+| product_name | phone_category       | 
+|--------------|--------------|
+| Galaxy Z Fold 3      | Expensive      | 
+| iPhone 12 Pro Max      | Expensive      | 
+| Galaxy Note 20       |Expensive      | 
+| iPhone 12 Pro      |  Expensive      | 
+| iPhone 12      | Mid Range       | 
+| Galaxy Z Flip 3      |  Mid Range       | 
+| Galaxy S21      |  Mid Range     |
+| OnePlus 9      |  Cheap     |
+| Pixel 5      |  Cheap     |
+| OnePlus Nord      | Cheap     |
+''')
             
             st.subheader('CUME_DIST()')
+            st.warning('CUME_DIST is an abbreviation for cumulative distribution which is used to identify the distribution percentage of each record with respect to all of the rows within a result.')
+            st.write('Fetch all the products which are constituting the first 30 percent of data in the electronics table based on price.')
+            cume_dist = '''
+SELECT 
+    product_name,
+    (percentage || '%') AS cume_percentage
+FROM                
+(
+    SELECT 
+        *,
+        ROUND(CUME_DIST() OVER (ORDER BY price DESC)::NUMERIC * 100, 2) AS percentage
+    FROM electronics
+) a
+    WHERE a.percentage <= 30;
+'''
+            st.code(cume_dist, language='sql')
+            st.write('''
+| product_name | cume_percentage       | 
+|--------------|--------------|
+| Galaxy Z Fold 3      | 3.70%      | 
+| iPhone 12 Pro Max      | 7.41%      | 
+| Galaxy Note 20       |11.11%      | 
+| iPhone 12 Pro      |  14.57%      | 
+| iPhone 12      | 18.54%       | 
+| Galaxy Z Flip 3      |  18.54%       | 
+| Galaxy S21      |  22.54%     |
+| OnePlus 9      |  25.93%   |
+| Pixel 5      |  27.85%     |
+| OnePlus Nord      | 29.12%     |
+''')
+
 
             st.subheader('Percent_Rank()')
 
@@ -3000,6 +3116,7 @@ print(f'Training Set Size: {X_train.shape[0]}')
 X_test.head()
 print(f'Testing Set Size: {X_test.shape[0]}')
 '''
+            st.code(numpy_split, language='python')
             mask = np.random.rand(len(df)) <= 0.8
             X_train = df[mask]
             X_test = df[~mask]
