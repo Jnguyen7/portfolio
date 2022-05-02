@@ -1198,7 +1198,7 @@ import pandas as pd
 
 titanic = sns.load_dataset("titanic")
 
-titanic_grouped = (titanic.groupby(['class']).apply(lambda x: x.sort_values(["survived"], ascending = False)).reset_index(drop=True))
+titanic_grouped = titanic.get_group(('class', 'sex')).sum()
 
     VALUES = titanic_grouped["survived"].values 
     LABELS = titanic_grouped["sex"].values
@@ -1276,14 +1276,9 @@ titanic_grouped = (titanic.groupby(['class']).apply(lambda x: x.sort_values(["su
         
         offset += size + PAD
 
-    gif_runner = st.image('images/processing.gif')
-
-    st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.pyplot()                
-                
-                
+    plt.show() 
 '''
-
+                st.code(circ_bar, language= 'python')
 
             if choose_ranking == 'Bar Plots':
                 st.markdown('<p class="font">Bar Plots </p>', unsafe_allow_html=True)
