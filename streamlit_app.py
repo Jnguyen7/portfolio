@@ -688,16 +688,13 @@ elif choose == "Archive":
         font-size:35px ; font-family: 'Montserrat'; color: #FF9633;} 
         </style> """, unsafe_allow_html=True)
         iris = pd.read_csv('csv_files/iris.csv')
-        col1,col2,col3 = st.columns([1,3,1])
-        with col2:
-            st.subheader('Iris Dataset')
-            st.dataframe(iris)
+        st.markdown('---')
         
         grouped_py = option_menu('Categories',["Distributions","Correlation", "Ranking", "Evolution", "Maps", "3D Plots"],
                         icons=['box', 'graph-up','bar-chart-fill', 'graph-up-arrow', 'map', 'badge-3d'],
                         orientation = 'horizontal',
                         styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
         "nav-link-selected": {"background-color": "#ddbea9"}
@@ -709,7 +706,7 @@ elif choose == "Archive":
             choose_distribution = option_menu(None,["Histograms","Box Plots", "Violin Plots", "Scatter Matrix", "Kernal Density Estimation"],
                          icons=['box', 'box', 'box', 'box', 'box'],
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
         "nav-link-selected": {"background-color": "#ddbea9"},
@@ -922,7 +919,7 @@ plt.show()
             choose_correlation = option_menu(None,["Scatter Plots","Density Heatmap", "Correlogram", "2D Scatter Plots"],
                          icons=['graph-up', 'graph-up', 'graph-up', 'graph-up'],
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
         "nav-link-selected": {"background-color": "#ddbea9"},
@@ -1180,15 +1177,113 @@ plt.show()
 
         if grouped_py == "Ranking":
             st.header('Ranking')
-            choose_ranking = option_menu(None,["Bar Plots","Pie Charts", "Lollipops", "Tree Maps", "Radar/Polar Plots"],
-                         icons=['bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill'],
+            choose_ranking = option_menu(None,["Bar Plots","Pie Charts", 'Grouped Circular Bar Charts', "Lollipops", "Tree Maps", "Radar/Polar Plots"],
+                         icons=['bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill','bar-chart-fill', 'bar-chart-fill'],
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
         "nav-link-selected": {"background-color": "#ddbea9"},
         }
         )
+
+            if choose_ranking == 'Grouped Circular Bar Charts':
+                st.markdown('<p class="font">Grouped Circular Bar Chart</p>', unsafe_allow_html=True)
+                circ_bar = '''
+# Import Libraries
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+titanic = sns.load_dataset("titanic")
+
+titanic_grouped = (titanic.groupby(['class']).apply(lambda x: x.sort_values(["survived"], ascending = False)).reset_index(drop=True))
+
+    VALUES = titanic_grouped["survived"].values 
+    LABELS = titanic_grouped["sex"].values
+    GROUP = titanic_grouped["brand_name"].values
+
+    PAD = 3
+    ANGLES_N = len(VALUES) + PAD * len(np.unique(GROUP))
+
+    ANGLES = np.linspace(0, 2 * np.pi, num=ANGLES_N, endpoint=False)
+    WIDTH = (2 * np.pi) / len(ANGLES)
+
+
+    OFFSET = np.pi / 2
+
+    # Specify offset
+    #ax.set_theta_offset(OFFSET)
+    offset = 0
+    IDXS = []
+
+    GROUPS_SIZE = []
+    unique, counts = np.unique(GROUP, return_counts=True)
+    result = np.column_stack((unique, counts))
+
+    for i in range(0, len(result)):
+        GROUPS_SIZE.append(result[i][1])
+    for size in GROUPS_SIZE:
+        IDXS += list(range(offset + PAD, offset + size + PAD))
+        offset += size + PAD
+
+    fig, ax = plt.subplots(figsize=(20, 10), subplot_kw={"projection": "polar"})
+
+    ax.set_theta_offset(OFFSET)
+    ax.set_ylim(-100, 100)
+    ax.set_frame_on(False)
+    ax.xaxis.grid(False)
+    ax.yaxis.grid(False)
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+    GROUPS_SIZE = []
+    unique, counts = np.unique(GROUP, return_counts=True)
+    result = np.column_stack((unique, counts))
+
+    for i in range(0, len(result)):
+        GROUPS_SIZE.append(result[i][1])
+    COLORS = [f"C{i}" for i, size in enumerate(GROUPS_SIZE) for _ in range(size)]
+
+    # Add bars to represent ...
+    ax.bar(
+        ANGLES[IDXS], VALUES, width=WIDTH, color=COLORS, 
+        edgecolor="white", linewidth=2
+    )
+
+    add_labels(ANGLES[IDXS], VALUES, LABELS, OFFSET, ax)
+
+    offset = 0 
+    test_list = unique.tolist()
+    for group, size in zip(test_list, GROUPS_SIZE):
+        # Add line below bars
+        x1 = np.linspace(ANGLES[offset + PAD], ANGLES[offset + size + PAD - 1], num=50)
+        ax.plot(x1, [-5] * 50, color="#333333")
+        
+        # Add text to indicate group
+        ax.text(
+            np.mean(x1), -20, group, color="#333333", fontsize=14, 
+            fontweight="bold", ha="center", va="center"
+        )
+        
+        # Add reference lines at 20, 40, 60, and 80
+        x2 = np.linspace(ANGLES[offset], ANGLES[offset + PAD - 1], num=50)
+        ax.plot(x2, [20] * 50, color="#bebebe", lw=0.8)
+        ax.plot(x2, [40] * 50, color="#bebebe", lw=0.8)
+        ax.plot(x2, [60] * 50, color="#bebebe", lw=0.8)
+        ax.plot(x2, [80] * 50, color="#bebebe", lw=0.8)
+        
+        offset += size + PAD
+
+    gif_runner = st.image('images/processing.gif')
+
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+    st.pyplot()                
+                
+                
+'''
+
 
             if choose_ranking == 'Bar Plots':
                 st.markdown('<p class="font">Bar Plots </p>', unsafe_allow_html=True)
@@ -1876,7 +1971,7 @@ fig.show()
             choose_evo = option_menu(None,["Line Plots","Area Plots"],
                          icons=['graph-up-arrow', 'graph-up-arrow'],
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
         "nav-link-selected": {"background-color": "#ddbea9"},
@@ -2038,7 +2133,7 @@ plt.show()
             choose_map = option_menu(None,["Choropleth","Bubble Maps"],
                          icons=['map', 'map'],
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
         "nav-link-selected": {"background-color": "#ddbea9"},
@@ -2166,7 +2261,7 @@ plt.text( -175, -62,'Data collected on twitter by @R_Graph_Gallery',
             choose_3d = option_menu(None,["Surface Maps"],
                          icons=['badge-3d'],
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
         "icon": {"color": "#001219", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
         "nav-link-selected": {"background-color": "#ddbea9"},
