@@ -2877,6 +2877,7 @@ FROM
             
             st.subheader('CUME_DIST()')
             st.warning('CUME_DIST is an abbreviation for cumulative distribution which is used to identify the distribution percentage of each record with respect to all of the rows within a result.')
+            st.warning('Formula: Current Row Number (-or- Row Number With Value Same As Current Row) / Total Number of Rows')
             st.write('Fetch all the products which are constituting the first 30 percent of data in the electronics table based on price.')
             cume_dist = '''
 SELECT 
@@ -2909,7 +2910,27 @@ FROM
 
 
             st.subheader('Percent_Rank()')
-
+            st.warning('Formula: Current Row Number - 1 / Total Number of Rows - 1')
+            st.write('Identify how much percentage more expensive is the "Galaxy Z Fold 3" when compared to all products')
+            cume_dist = '''
+SELECT 
+    product_name,
+    percentage_rank
+FROM
+(
+    SELECT 
+        *,
+        ROUND(PERCENT_RANK() OVER(ORDER BY price)::NUMERIC * 100, 2) AS percentage_rank
+    FROM electronics
+) x
+WHERE x.product_name = 'Galaxy Z Fold 3';
+'''
+            st.code(cume_dist, language='sql')
+            st.write('''
+| product_name | cume_percentage       | 
+|--------------|--------------|
+| Galaxy Z Fold 3      | 80.77%      | 
+''')
 
 
         if choose_sql == "Rollups":
@@ -3433,6 +3454,64 @@ predicted = predict(model_fit, X_test)
                 st.code(svm_r, language='R')
 
 
+        if choose_ML == 'K-Nearest Neightbors (KNN)':
+            st.markdown('<p class="font">K-Nearest Neighbors', unsafe_allow_html=True)
+            st.warning('K-nearest neighbors algorithm is a non-parametric supervised learning method used for classification and regression. It assumes that similar things exist in close proximity or near to each other.')
+            st.subheader('k-NN Classification')
+            st.write('The ouput variable is a class membership. That is, an object is classified by a plurality vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors. If k = 1, then the object is assigned to the class of that single nearest neighbor.')
+            st.subheader('k-NN Regression')
+            st.write('The output is the property value for the object. This value is the average of the values of k nearest neighbors.')
+
+            svm_py = '''
+# Import Libraries 
+from sklearn.neighbors import KNeighborsClassifier
+
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+##### Note that values must be numerical and numpy arrays #####
+X_train = input_variables_values_training_data
+X_test = input_variables_values_tests_data
+y_train = target_variables_values_training_data
+
+# Classification Object
+knn_model = KNeighborsClassifier(n_neighbors = 6)
+
+# Training Model With Training Sets
+knn_model.fit(X_train, y_train)
+
+# Check Score
+knn_model.score(X_train, y_train)
+
+# Predict Output
+predicted = knn_model.predict(X_test)
+'''
+            svm_r= '''
+# Import packages
+library(knn)
+
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+X_train <- input_variables_values_training_data
+X_test <- input_variables_values_tests_data
+y_train <- target_variables_values_training_data
+
+x <- cbind(X_train, y_train)
+
+# Fitting Model
+model_fit <- knn(y_train ~., data = X_train, k = 5)
+
+# Check Score
+summary(model_fit)
+
+# Predict Output
+predicted = predict(model_fit, X_test)
+'''
+            with cols1:
+                st.header('Python')
+                st.code(svm_py, language='python')
+            with cols2:
+                st.header('R')
+                st.code(svm_r, language='R')
 
 
 elif choose == "About Me & Contact":
