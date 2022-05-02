@@ -1279,7 +1279,93 @@ titanic_grouped = titanic.get_group(('class', 'sex')).sum()
     plt.show() 
 '''
                 st.code(circ_bar, language= 'python')
+                titanic = sns.load_dataset("titanic")
 
+                titanic_grouped = titanic.get_group(('class', 'sex')).sum()
+
+                    VALUES = titanic_grouped["survived"].values 
+                    LABELS = titanic_grouped["sex"].values
+                    GROUP = titanic_grouped["brand_name"].values
+
+                    PAD = 3
+                    ANGLES_N = len(VALUES) + PAD * len(np.unique(GROUP))
+
+                    ANGLES = np.linspace(0, 2 * np.pi, num=ANGLES_N, endpoint=False)
+                    WIDTH = (2 * np.pi) / len(ANGLES)
+
+
+                    OFFSET = np.pi / 2
+
+                    # Specify offset
+                    #ax.set_theta_offset(OFFSET)
+                    offset = 0
+                    IDXS = []
+
+                    GROUPS_SIZE = []
+                    unique, counts = np.unique(GROUP, return_counts=True)
+                    result = np.column_stack((unique, counts))
+
+                    for i in range(0, len(result)):
+                        GROUPS_SIZE.append(result[i][1])
+                    for size in GROUPS_SIZE:
+                        IDXS += list(range(offset + PAD, offset + size + PAD))
+                        offset += size + PAD
+
+                    fig, ax = plt.subplots(figsize=(20, 10), subplot_kw={"projection": "polar"})
+
+                    ax.set_theta_offset(OFFSET)
+                    ax.set_ylim(-100, 100)
+                    ax.set_frame_on(False)
+                    ax.xaxis.grid(False)
+                    ax.yaxis.grid(False)
+                    ax.set_xticks([])
+                    ax.set_yticks([])
+
+                    GROUPS_SIZE = []
+                    unique, counts = np.unique(GROUP, return_counts=True)
+                    result = np.column_stack((unique, counts))
+
+                    for i in range(0, len(result)):
+                        GROUPS_SIZE.append(result[i][1])
+                    COLORS = [f"C{i}" for i, size in enumerate(GROUPS_SIZE) for _ in range(size)]
+
+                    # Add bars to represent ...
+                    ax.bar(
+                        ANGLES[IDXS], VALUES, width=WIDTH, color=COLORS, 
+                        edgecolor="white", linewidth=2
+                    )
+
+                    add_labels(ANGLES[IDXS], VALUES, LABELS, OFFSET, ax)
+
+                    offset = 0 
+                    test_list = unique.tolist()
+                    for group, size in zip(test_list, GROUPS_SIZE):
+                        # Add line below bars
+                        x1 = np.linspace(ANGLES[offset + PAD], ANGLES[offset + size + PAD - 1], num=50)
+                        ax.plot(x1, [-5] * 50, color="#333333")
+
+                        # Add text to indicate group
+                        ax.text(
+                            np.mean(x1), -20, group, color="#333333", fontsize=14, 
+                            fontweight="bold", ha="center", va="center"
+                        )
+
+                        # Add reference lines at 20, 40, 60, and 80
+                        x2 = np.linspace(ANGLES[offset], ANGLES[offset + PAD - 1], num=50)
+                        ax.plot(x2, [20] * 50, color="#bebebe", lw=0.8)
+                        ax.plot(x2, [40] * 50, color="#bebebe", lw=0.8)
+                        ax.plot(x2, [60] * 50, color="#bebebe", lw=0.8)
+                        ax.plot(x2, [80] * 50, color="#bebebe", lw=0.8)
+
+                        offset += size + PAD
+
+                    st.pyplot()
+                
+                
+                
+                
+                
+          
             if choose_ranking == 'Bar Plots':
                 st.markdown('<p class="font">Bar Plots </p>', unsafe_allow_html=True)
                 bar_code = '''
