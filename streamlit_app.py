@@ -3446,6 +3446,8 @@ summary(model_fit)
 # Predict Output
 predicted = predict(model_fit, X_test)
 '''
+            
+            cols1, cols2 = st.columns(2)
             with cols1:
                 st.header('Python')
                 st.code(svm_py, language='python')
