@@ -1281,11 +1281,11 @@ titanic_grouped = titanic.get_group(('class', 'sex')).sum()
                 st.code(circ_bar, language= 'python')
                 titanic = sns.load_dataset("titanic")
 
-                titanic_grouped = titanic.get_group(('class', 'sex')).sum()
+                titanic_grouped = titanic.get_group(('class', 'sex'))
 
-                VALUES = titanic_grouped["survived"].values 
+                VALUES = titanic_grouped["survived"].sum() 
                 LABELS = titanic_grouped["sex"].values
-                GROUP = titanic_grouped["brand_name"].values
+                GROUP = titanic_grouped["class"].values
 
                 PAD = 3
                 ANGLES_N = len(VALUES) + PAD * len(np.unique(GROUP))
