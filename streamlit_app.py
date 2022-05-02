@@ -3446,8 +3446,6 @@ summary(model_fit)
 # Predict Output
 predicted = predict(model_fit, X_test)
 '''
-            
-            cols1, cols2 = st.columns(2)
             with cols1:
                 st.header('Python')
                 st.code(svm_py, language='python')
@@ -3463,7 +3461,7 @@ predicted = predict(model_fit, X_test)
             st.write('The ouput variable is a class membership. That is, an object is classified by a plurality vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors. If k = 1, then the object is assigned to the class of that single nearest neighbor.')
             st.subheader('k-NN Regression')
             st.write('The output is the property value for the object. This value is the average of the values of k nearest neighbors.')
-
+            cols1, cols2 = st.columns(2)
             svm_py = '''
 # Import Libraries 
 from sklearn.neighbors import KNeighborsClassifier
@@ -3508,6 +3506,7 @@ summary(model_fit)
 # Predict Output
 predicted = predict(model_fit, X_test)
 '''
+            
             with cols1:
                 st.header('Python')
                 st.code(svm_py, language='python')
