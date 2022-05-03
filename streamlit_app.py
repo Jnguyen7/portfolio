@@ -1189,6 +1189,41 @@ plt.show()
 
             if choose_ranking == 'Grouped Circular Bar Charts':
                 st.markdown('<p class="font">Grouped Circular Bar Chart</p>', unsafe_allow_html=True)
+                get_labels = '''
+def get_label_rotation(angle, offset):
+    # Rotation must be specified in degrees :(
+    rotation = np.rad2deg(angle + offset)
+    if angle <= np.pi:
+        alignment = "right"
+        rotation = rotation + 180
+    else: 
+        alignment = "left"
+    return rotation, alignment            
+'''
+                add_labels_code = '''
+def add_labels(angles, values, labels, offset, ax):
+    
+    # This is the space between the end of the bar and the label
+    padding = 4
+    
+    # Iterate over angles, values, and labels, to add all of them.
+    for angle, value, label, in zip(angles, values, labels):
+        angle = angle
+        
+        # Obtain text rotation and alignment
+        rotation, alignment = get_label_rotation(angle, offset)
+
+        # And finally add the text
+        ax.text(
+            x=angle, 
+            y=value + padding, 
+            s=label, 
+            ha=alignment, 
+            va="center", 
+            rotation=rotation, 
+            rotation_mode="anchor"
+        )                      
+'''
                 circ_bar = '''
 # Import Libraries
 import seaborn as sns
@@ -1196,121 +1231,160 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+
 titanic = sns.load_dataset("titanic")
 
-titanic_grouped = titanic.get_group(('class', 'sex')).sum()
+titanic_grouped = titanic.groupby(['class', 'sex']).sum()
 
-    VALUES = titanic_grouped["survived"].values 
-    LABELS = titanic_grouped["sex"].values
-    GROUP = titanic_grouped["brand_name"].values
+VALUES = titanic_grouped["survived"].values 
 
-    PAD = 3
-    ANGLES_N = len(VALUES) + PAD * len(np.unique(GROUP))
+LABELS = []
+for i in range(0,len(titanic_grouped.index)):
+    LABELS.append(titanic_grouped.index[i][1])
 
-    ANGLES = np.linspace(0, 2 * np.pi, num=ANGLES_N, endpoint=False)
-    WIDTH = (2 * np.pi) / len(ANGLES)
+GROUP = []
+for i in range(0,len(titanic_grouped.index)):
+    GROUP.append(titanic_grouped.index[i][0])
+
+ANGLES = np.linspace(0, 2 * np.pi, len(titanic_grouped.index), endpoint=False)       
+
+# First Bar Placement
+OFFSET = np.pi / 2
+
+# Add Bars
+PAD = 3
+ANGLES_N = len(VALUES) + PAD * len(np.unique(GROUP))
+ANGLES = np.linspace(0, 2 * np.pi, num=ANGLES_N, endpoint=False)
+WIDTH = (2 * np.pi) / len(ANGLES)
+
+# Obtaining Indexes
+offset = 0
+IDXS = []
+GROUPS_SIZE = [2, 2, 2]
+for size in GROUPS_SIZE:
+    IDXS += list(range(offset + PAD, offset + size + PAD))
+    offset += size + PAD
+
+# Plot Initialization
+fig, ax = plt.subplots(figsize=(20, 10), subplot_kw={"projection": "polar"})
+
+ax.set_theta_offset(OFFSET)
+ax.set_ylim(-100, 100)
+ax.set_frame_on(False)
+ax.xaxis.grid(False)
+ax.yaxis.grid(False)
+ax.set_xticks([])
+ax.set_yticks([])
 
 
-    OFFSET = np.pi / 2
+COLORS = [f"C{i}" for i, size in enumerate(GROUPS_SIZE) for _ in range(size)]
 
-    # Specify offset
-    #ax.set_theta_offset(OFFSET)
-    offset = 0
-    IDXS = []
+# Bar Placement
+ax.bar(
+ANGLES[IDXS], VALUES, width=WIDTH, color=COLORS, 
+edgecolor="white", linewidth=2
+)
 
-    GROUPS_SIZE = []
-    unique, counts = np.unique(GROUP, return_counts=True)
-    result = np.column_stack((unique, counts))
+add_labels(ANGLES[IDXS], VALUES, LABELS, OFFSET, ax)
 
-    for i in range(0, len(result)):
-        GROUPS_SIZE.append(result[i][1])
-    for size in GROUPS_SIZE:
-        IDXS += list(range(offset + PAD, offset + size + PAD))
-        offset += size + PAD
+unique, counts = np.unique(GROUP, return_counts=True)
+test_list = unique.tolist()
 
-    fig, ax = plt.subplots(figsize=(20, 10), subplot_kw={"projection": "polar"})
+offset = 0 
+for group, size in zip(test_list, GROUPS_SIZE):
+    # Add line below bars
+    x1 = np.linspace(ANGLES[offset + PAD], ANGLES[offset + size + PAD - 1], num=50)
+    ax.plot(x1, [-5] * 50, color="#333333")
 
-    ax.set_theta_offset(OFFSET)
-    ax.set_ylim(-100, 100)
-    ax.set_frame_on(False)
-    ax.xaxis.grid(False)
-    ax.yaxis.grid(False)
-    ax.set_xticks([])
-    ax.set_yticks([])
+# Add Group Text Label
+ax.text(
+    np.mean(x1), -20, group, color="#333333", fontsize=14, 
+    fontweight="bold", ha="center", va="center"
+)
 
-    GROUPS_SIZE = []
-    unique, counts = np.unique(GROUP, return_counts=True)
-    result = np.column_stack((unique, counts))
+# Add reference lines at 20, 40, 60, and 80
+x2 = np.linspace(ANGLES[offset], ANGLES[offset + PAD - 1], num=50)
+ax.plot(x2, [20] * 50, color="#bebebe", lw=0.8)
+ax.plot(x2, [40] * 50, color="#bebebe", lw=0.8)
+ax.plot(x2, [60] * 50, color="#bebebe", lw=0.8)
+ax.plot(x2, [80] * 50, color="#bebebe", lw=0.8)
 
-    for i in range(0, len(result)):
-        GROUPS_SIZE.append(result[i][1])
-    COLORS = [f"C{i}" for i, size in enumerate(GROUPS_SIZE) for _ in range(size)]
+offset += size + PAD
 
-    # Add bars to represent ...
-    ax.bar(
-        ANGLES[IDXS], VALUES, width=WIDTH, color=COLORS, 
-        edgecolor="white", linewidth=2
-    )
-
-    add_labels(ANGLES[IDXS], VALUES, LABELS, OFFSET, ax)
-
-    offset = 0 
-    test_list = unique.tolist()
-    for group, size in zip(test_list, GROUPS_SIZE):
-        # Add line below bars
-        x1 = np.linspace(ANGLES[offset + PAD], ANGLES[offset + size + PAD - 1], num=50)
-        ax.plot(x1, [-5] * 50, color="#333333")
-        
-        # Add text to indicate group
-        ax.text(
-            np.mean(x1), -20, group, color="#333333", fontsize=14, 
-            fontweight="bold", ha="center", va="center"
-        )
-        
-        # Add reference lines at 20, 40, 60, and 80
-        x2 = np.linspace(ANGLES[offset], ANGLES[offset + PAD - 1], num=50)
-        ax.plot(x2, [20] * 50, color="#bebebe", lw=0.8)
-        ax.plot(x2, [40] * 50, color="#bebebe", lw=0.8)
-        ax.plot(x2, [60] * 50, color="#bebebe", lw=0.8)
-        ax.plot(x2, [80] * 50, color="#bebebe", lw=0.8)
-        
-        offset += size + PAD
-
-    plt.show() 
+plt.show()
 '''
-                st.code(circ_bar, language= 'python')
+                st.code(get_labels, language='python')
+                st.code(add_labels_code, language='python')
+                st.code(circ_bar, language='python')
+
+                def get_label_rotation(angle, offset):
+                    # Rotation must be specified in degrees :(
+                    rotation = np.rad2deg(angle + offset)
+                    if angle <= np.pi:
+                        alignment = "right"
+                        rotation = rotation + 180
+                    else: 
+                        alignment = "left"
+                    return rotation, alignment
+
+
+                def add_labels(angles, values, labels, offset, ax):
+    
+                    # This is the space between the end of the bar and the label
+                    padding = 4
+                    
+                    # Iterate over angles, values, and labels, to add all of them.
+                    for angle, value, label, in zip(angles, values, labels):
+                        angle = angle
+                        
+                        # Obtain text rotation and alignment
+                        rotation, alignment = get_label_rotation(angle, offset)
+
+                        # And finally add the text
+                        ax.text(
+                            x=angle, 
+                            y=value + padding, 
+                            s=label, 
+                            ha=alignment, 
+                            va="center", 
+                            rotation=rotation, 
+                            rotation_mode="anchor"
+                        )
+
                 titanic = sns.load_dataset("titanic")
 
-                titanic_grouped = titanic.get_group(('class', 'sex'))
+                titanic_grouped = titanic.groupby(['class', 'sex']).sum()
 
-                VALUES = titanic_grouped["survived"].sum() 
-                LABELS = titanic_grouped["sex"].values
-                GROUP = titanic_grouped["class"].values
+                VALUES = titanic_grouped["survived"].values 
 
+                LABELS = []
+                for i in range(0,len(titanic_grouped.index)):
+                    LABELS.append(titanic_grouped.index[i][1])
+
+                GROUP = []
+                for i in range(0,len(titanic_grouped.index)):
+                    GROUP.append(titanic_grouped.index[i][0])
+
+                ANGLES = np.linspace(0, 2 * np.pi, len(titanic_grouped.index), endpoint=False)       
+
+                # First Bar Placement
+                OFFSET = np.pi / 2
+
+                # Add three empty bars to the end of each group
                 PAD = 3
                 ANGLES_N = len(VALUES) + PAD * len(np.unique(GROUP))
-
                 ANGLES = np.linspace(0, 2 * np.pi, num=ANGLES_N, endpoint=False)
                 WIDTH = (2 * np.pi) / len(ANGLES)
 
-
-                OFFSET = np.pi / 2
-
-                # Specify offset
-                #ax.set_theta_offset(OFFSET)
+                # Obtaining the right indexes is now a little more complicated
                 offset = 0
                 IDXS = []
-
-                GROUPS_SIZE = []
-                unique, counts = np.unique(GROUP, return_counts=True)
-                result = np.column_stack((unique, counts))
-
-                for i in range(0, len(result)):
-                    GROUPS_SIZE.append(result[i][1])
+                GROUPS_SIZE = [2, 2, 2]
                 for size in GROUPS_SIZE:
                     IDXS += list(range(offset + PAD, offset + size + PAD))
                     offset += size + PAD
 
+                # Same layout as above
                 fig, ax = plt.subplots(figsize=(20, 10), subplot_kw={"projection": "polar"})
 
                 ax.set_theta_offset(OFFSET)
@@ -1321,15 +1395,11 @@ titanic_grouped = titanic.get_group(('class', 'sex')).sum()
                 ax.set_xticks([])
                 ax.set_yticks([])
 
-                GROUPS_SIZE = []
-                unique, counts = np.unique(GROUP, return_counts=True)
-                result = np.column_stack((unique, counts))
 
-                for i in range(0, len(result)):
-                    GROUPS_SIZE.append(result[i][1])
                 COLORS = [f"C{i}" for i, size in enumerate(GROUPS_SIZE) for _ in range(size)]
 
-                # Add bars to represent ...
+                # And finally add the bars. 
+                # Note again the `ANGLES[IDXS]` to drop some angles that leave the space between bars.
                 ax.bar(
                     ANGLES[IDXS], VALUES, width=WIDTH, color=COLORS, 
                     edgecolor="white", linewidth=2
@@ -1337,35 +1407,35 @@ titanic_grouped = titanic.get_group(('class', 'sex')).sum()
 
                 add_labels(ANGLES[IDXS], VALUES, LABELS, OFFSET, ax)
 
-                offset = 0 
+                unique, counts = np.unique(GROUP, return_counts=True)
                 test_list = unique.tolist()
+
+                offset = 0 
                 for group, size in zip(test_list, GROUPS_SIZE):
                     # Add line below bars
                     x1 = np.linspace(ANGLES[offset + PAD], ANGLES[offset + size + PAD - 1], num=50)
                     ax.plot(x1, [-5] * 50, color="#333333")
-
+                    
                     # Add text to indicate group
                     ax.text(
                         np.mean(x1), -20, group, color="#333333", fontsize=14, 
                         fontweight="bold", ha="center", va="center"
                     )
-
+                    
                     # Add reference lines at 20, 40, 60, and 80
                     x2 = np.linspace(ANGLES[offset], ANGLES[offset + PAD - 1], num=50)
                     ax.plot(x2, [20] * 50, color="#bebebe", lw=0.8)
                     ax.plot(x2, [40] * 50, color="#bebebe", lw=0.8)
                     ax.plot(x2, [60] * 50, color="#bebebe", lw=0.8)
                     ax.plot(x2, [80] * 50, color="#bebebe", lw=0.8)
-
+                    
                     offset += size + PAD
-
+                
                 st.pyplot()
-                
-                
-                
-                
-                
-          
+
+
+
+
             if choose_ranking == 'Bar Plots':
                 st.markdown('<p class="font">Bar Plots </p>', unsafe_allow_html=True)
                 bar_code = '''
