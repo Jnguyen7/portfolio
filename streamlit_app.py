@@ -1094,7 +1094,6 @@ plt.show()
                     markers=["o", "s", "D"],
                     palette="Set2",
                     height = 14)
-                plt.show()
                 st.code(hist_code, language='python')
                 st.pyplot()
 
