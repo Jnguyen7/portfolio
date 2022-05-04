@@ -1203,11 +1203,12 @@ def get_label_rotation(angle, offset):
 def add_labels(angles, values, labels, offset, ax):
     
     # This is the space between the end of the bar and the label
-    padding = 4
+    padding = 7
     
     # Iterate over angles, values, and labels, to add all of them.
     for angle, value, label, in zip(angles, values, labels):
         angle = angle
+        value = value
         
         # Obtain text rotation and alignment
         rotation, alignment = get_label_rotation(angle, offset)
@@ -1216,12 +1217,12 @@ def add_labels(angles, values, labels, offset, ax):
         ax.text(
             x=angle, 
             y=value + padding, 
-            s=label, 
+            s=f'{label}, {value}', 
             ha=alignment, 
             va="center", 
             rotation=rotation, 
             rotation_mode="anchor"
-        )                      
+        )                   
 '''
                 circ_bar = '''
 # Import Libraries
@@ -1343,7 +1344,7 @@ plt.show()
                         ax.text(
                             x=angle, 
                             y=value + padding, 
-                            s=label, 
+                            s=f'{label}, {value}', 
                             ha=alignment, 
                             va="center", 
                             rotation=rotation, 
