@@ -1336,6 +1336,7 @@ plt.show()
                     # Iterate over angles, values, and labels, to add all of them.
                     for angle, value, label, in zip(angles, values, labels):
                         angle = angle
+                        value = value
                         
                         # Obtain text rotation and alignment
                         rotation, alignment = get_label_rotation(angle, offset)
