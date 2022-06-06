@@ -503,17 +503,17 @@ with st.sidebar:
                          icons=['house','shop-window', 'archive-fill', 'book','person-lines-fill'],
                          menu_icon="briefcase", default_index=0,
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "container": {"padding": "5!important", "background-color": "#282c34"},
+        "icon": {"color": "#ffffff", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
+        "nav-link-selected": {"background-color": "#eee"},
     }
     )
     
 
 if choose == "Home":
         st.markdown(""" <style> .font {
-        font-size:35px ; font-family: 'serif'; color: #001219;} 
+        font-size:35px ; font-family: 'serif'; color: #ffffff;} 
         </style> """, unsafe_allow_html=True)
         st.markdown('<p class="font">Data Analyst/Scientist From Houston, Texas, USA</p>', unsafe_allow_html=True)
 
@@ -537,7 +537,7 @@ elif choose == "Full Projects":
             st.image(feature_image1, use_column_width= True)
         with text_col:
             st.markdown(""" <style> .font {
-        font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
+        font-size:35px ; font-family: 'Cooper Black'; color: #ffffff;} 
         </style> """, unsafe_allow_html=True)
             st.markdown('<p class="font">Amazons ‘Best’ Sellers </p>', unsafe_allow_html=True)    
             st.markdown("By Joshua Nguyen - Project that webscrapes Amazon's Best Sellers Page. Its main goal is to direct how individual businesses can achieve Amazon's top sellers list.")
@@ -676,16 +676,16 @@ elif choose == "Archive":
                          icons=['list-nested', 'server','gear-wide-connected'],
                          orientation = 'horizontal',
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "container": {"padding": "5!important", "background-color": "#282c34"},
+        "icon": {"color": "#ffffff", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
+        "nav-link-selected": {"background-color": "#eee"},
     }
     )
 
     if choose == "Python":
         st.markdown(""" <style> .font {
-        font-size:35px ; font-family: 'Montserrat'; color: #FF9633;} 
+        font-size:35px ; font-family: 'Montserrat'; color: #ffffff;} 
         </style> """, unsafe_allow_html=True)
         iris = pd.read_csv('csv_files/iris.csv')
         st.markdown('---')
@@ -694,10 +694,10 @@ elif choose == "Archive":
                         icons=['box', 'graph-up','bar-chart-fill', 'graph-up-arrow', 'map', 'badge-3d'],
                         orientation = 'horizontal',
                         styles={
-        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "container": {"padding": "5!important", "background-color": "#282c34"},
+        "icon": {"color": "#ffffff", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"}
+        "nav-link-selected": {"background-color": "#eee"}
         }
         )
 
@@ -706,10 +706,10 @@ elif choose == "Archive":
             choose_distribution = option_menu(None,["Histograms","Box Plots", "Violin Plots", "Scatter Matrix", "Kernal Density Estimation"],
                          icons=['box', 'box', 'box', 'box', 'box'],
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "container": {"padding": "5!important", "background-color": "#282c34"},
+        "icon": {"color": "#ffffff", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
+        "nav-link-selected": {"background-color": "#282c34"},
         }
         )
             if choose_distribution == "Histograms":
@@ -919,10 +919,10 @@ plt.show()
             choose_correlation = option_menu(None,["Scatter Plots","Density Heatmap", "Correlogram", "2D Scatter Plots"],
                          icons=['graph-up', 'graph-up', 'graph-up', 'graph-up'],
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "container": {"padding": "5!important", "background-color": "#282c34"},
+        "icon": {"color": "#ffffff", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
+        "nav-link-selected": {"background-color": "#282c34"},
         }
         )
             if choose_correlation == 'Scatter Plots':
@@ -1094,6 +1094,7 @@ plt.show()
                     markers=["o", "s", "D"],
                     palette="Set2",
                     height = 14)
+                plt.show()
                 st.code(hist_code, language='python')
                 st.pyplot()
 
@@ -1179,10 +1180,10 @@ plt.show()
             choose_ranking = option_menu(None,["Bar Plots","Pie Charts", 'Grouped Circular Bar Charts', "Lollipops", "Tree Maps", "Radar/Polar Plots"],
                          icons=['bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill', 'bar-chart-fill','bar-chart-fill', 'bar-chart-fill'],
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "container": {"padding": "5!important", "background-color": "#282c34"},
+        "icon": {"color": "#ffffff", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
+        "nav-link-selected": {"background-color": "#eee"},
         }
         )
 
@@ -1203,12 +1204,11 @@ def get_label_rotation(angle, offset):
 def add_labels(angles, values, labels, offset, ax):
     
     # This is the space between the end of the bar and the label
-    padding = 7
+    padding = 4
     
     # Iterate over angles, values, and labels, to add all of them.
     for angle, value, label, in zip(angles, values, labels):
         angle = angle
-        value = value
         
         # Obtain text rotation and alignment
         rotation, alignment = get_label_rotation(angle, offset)
@@ -1217,12 +1217,12 @@ def add_labels(angles, values, labels, offset, ax):
         ax.text(
             x=angle, 
             y=value + padding, 
-            s=f'{label}, {value}', 
+            s=label, 
             ha=alignment, 
             va="center", 
             rotation=rotation, 
             rotation_mode="anchor"
-        )                   
+        )                      
 '''
                 circ_bar = '''
 # Import Libraries
@@ -1336,7 +1336,6 @@ plt.show()
                     # Iterate over angles, values, and labels, to add all of them.
                     for angle, value, label, in zip(angles, values, labels):
                         angle = angle
-                        value = value
                         
                         # Obtain text rotation and alignment
                         rotation, alignment = get_label_rotation(angle, offset)
@@ -1345,7 +1344,7 @@ plt.show()
                         ax.text(
                             x=angle, 
                             y=value + padding, 
-                            s=f'{label}, {value}', 
+                            s=label, 
                             ha=alignment, 
                             va="center", 
                             rotation=rotation, 
@@ -2123,10 +2122,10 @@ fig.show()
             choose_evo = option_menu(None,["Line Plots","Area Plots"],
                          icons=['graph-up-arrow', 'graph-up-arrow'],
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "container": {"padding": "5!important", "background-color": "#282c34"},
+        "icon": {"color": "#ffffff", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
+        "nav-link-selected": {"background-color": "#eee"},
         }
         )
 
@@ -2285,10 +2284,10 @@ plt.show()
             choose_map = option_menu(None,["Choropleth","Bubble Maps"],
                          icons=['map', 'map'],
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "container": {"padding": "5!important", "background-color": "#282c34"},
+        "icon": {"color": "#ffffff", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
+        "nav-link-selected": {"background-color": "#eee"},
         }
         )
 
@@ -2413,10 +2412,10 @@ plt.text( -175, -62,'Data collected on twitter by @R_Graph_Gallery',
             choose_3d = option_menu(None,["Surface Maps"],
                          icons=['badge-3d'],
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fbeaeb"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "container": {"padding": "5!important", "background-color": "#282c34"},
+        "icon": {"color": "#ffffff", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
+        "nav-link-selected": {"background-color": "#eee"},
         }
         )
             if choose_3d == 'Surface Maps':
@@ -2519,10 +2518,10 @@ plt.show()
         choose_sql = option_menu(None,["Important SQl Functions", "Complex SQL Functions", 'Complex Window Functions',"Recursion/Looping in SQL", "Case Statements", 'Aggregate Functions','Rollups','Ranking Functions', 'Analytic Functions', 'Modifying Data','Date', 'Strings'],
                             icons=['blank', 'blank', 'blank', 'blank', 'blank','blank', 'blank', 'blank', 'blank', 'blank', 'blank', 'blank'],
                             styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "container": {"padding": "5!important", "background-color": "#282c34"},
+        "icon": {"color": "#ffffff", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
+        "nav-link-selected": {"background-color": "#eee"},
         },
         #orientation = 'horizontal'
         )
@@ -2637,6 +2636,7 @@ JOIN CTE b
     ON a.month_date = b.month_date - INTERVAL '1 month'
 
 '''
+            st.code(sql_mom, language = 'sql')
 
 
 
@@ -3238,10 +3238,10 @@ WHERE x.product_name = 'Galaxy Z Fold 3';
         choose_ML = option_menu(None,["Basic Terminology", "Splitting Data", "Linear Regression", "Logistic Regression", "Decision Tree", "Support Vector Machine (SVM)", "Naive Bayes", "K-Nearest Neightbors (KNN)", "K-Means", "Random Forest", "Dimension Redcution Algorithms", "Gradient Boosting & AdaBoost" ],
                             icons=['journal-richtext','terminal-split','graph-up-arrow', 'graph-up-arrow', 'tree', 'file-bar-graph', 'align-center','blank', 'blank', 'blank', 'blank', 'blank'],
                             styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
-        "icon": {"color": "#001219", "font-size": "25px"}, 
+        "container": {"padding": "5!important", "background-color": "#282c34"},
+        "icon": {"color": "#ffffff", "font-size": "25px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#ddbea9"},
+        "nav-link-selected": {"background-color": "#eee"},
         },
         #orientation = 'horizontal'
         )
