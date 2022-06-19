@@ -529,6 +529,33 @@ if choose == "Home":
         st.dataframe(texas_data)
 
 elif choose == "Full Projects":
+    # ----- GPU ----- #
+    feature_image1 = 'images\NVIDIA-GeForce-RTX-40-GPU-Custom-Custom.png'
+    with st.container():
+        image_col, text_col = st.columns((1,3))
+        with image_col:
+            st.image(feature_image1, use_column_width= True)
+        with text_col:
+            st.markdown(""" <style> .font {
+        font-size:35px ; font-family: 'Cooper Black'; color: #ffffff;} 
+        </style> """, unsafe_allow_html=True)
+            st.markdown('<p class="font">Find a Graphics Processing Unit </p>', unsafe_allow_html=True)    
+            st.markdown("By Joshua Nguyen - Project that webscrapes all Microcenter's stores for their current GPU inventory. Its main goal is to help buyers purchase the market's top GPU's as a reasonable and fair price.")
+            st.markdown("View code on my GitHub Repo: https://github.com/Jnguyen7/Python/blob/main/microcetner.py")
+            st.markdown("Tools: Python")
+            st.markdown("Framework: Streamlit")
+    col1, col2,col3= st.columns(3)
+    with col1:  
+        if st.button('Read PDF',key='1'):            
+            show_pdf('pdfs/GPU.pdf')
+    with col2:
+        st.button('Close PDF',key='2')                   
+    with col3:
+        download_pdf('pdfs/GPU.pdf')
+
+    st.markdown("---")
+
+
     # ----- Amazon Best Sellers ----- #
     feature_image1 = 'images/amazon.png'
     with st.container():
@@ -3236,7 +3263,7 @@ WHERE x.product_name = 'Galaxy Z Fold 3';
 
     if choose == "Machine Learning":
         choose_ML = option_menu(None,["Basic Terminology", "Splitting Data", "Linear Regression", "Logistic Regression", "Decision Tree", "Support Vector Machine (SVM)", "Naive Bayes", "K-Nearest Neightbors (KNN)", "K-Means", "Random Forest", "Dimension Redcution Algorithms", "Gradient Boosting & AdaBoost" ],
-                            icons=['journal-richtext','terminal-split','graph-up-arrow', 'graph-up-arrow', 'tree', 'file-bar-graph', 'align-center','blank', 'blank', 'blank', 'blank', 'blank'],
+                            icons=['journal-richtext','terminal-split','graph-up-arrow', 'graph-up-arrow', 'tree', 'file-bar-graph', 'align-center','collection', 'ui-radios', 'tree-fill', 'caret-down', 'badge-ad'],
                             styles={
         "container": {"padding": "5!important", "background-color": "#282c34"},
         "icon": {"color": "#ffffff", "font-size": "25px"}, 
@@ -3760,6 +3787,64 @@ predicted = predict(model_fit, X_test)
             with cols2:
                 st.header('R')
                 st.code(svm_r, language='R')
+
+
+
+        if choose_ML == 'K-Means':
+            st.markdown('<p class="font">K-Means', unsafe_allow_html=True)
+            st.warning('K-Means partitions n observations into k clusters where each observation belongs to the cluster with the nearest mean. THat is, k-means allocates each data point to the nearest cluster while keeping the centroids minimal. This partitions the dataset into Veronoi cells which is a paritition of a plane into regions close to each of a given set of objects.')
+            cols1, cols2 = st.columns(2)
+            svm_py = '''
+# Import Libraries 
+from sklearn.neighbors import KMeans
+
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+##### Note that values must be numerical and numpy arrays #####
+X_train = input_variables_values_training_data
+X_test = input_variables_values_tests_data
+y_train = target_variables_values_training_data
+
+# Classification Object
+k_means = KMeans(n_clusters = 3, random_state = 0)
+
+# Training Model With Training Sets
+k_means.fit(X_train)
+
+# Predict Output
+predicted = k_means.predict(X_test)
+'''
+            svm_r= '''
+# Import packages
+library("ClusterR")
+library("cluster")
+
+# Train and Test Datasets
+# Identify Feature and Response Variable/s
+X_train <- input_variables_values_training_data
+X_test <- input_variables_values_tests_data
+y_train <- target_variables_values_training_data
+
+# Fitting Model
+model_fit <- kmeans(y_train ~., data = X_train, k = 5)
+
+# Check Score
+summary(model_fit)
+
+# Predict Output
+predicted = predict(model_fit, X_test)
+'''
+            
+            with cols1:
+                st.header('Python')
+                st.code(svm_py, language='python')
+            with cols2:
+                st.header('R')
+                st.code(svm_r, language='R')
+
+
+
+
 
 
 elif choose == "About Me & Contact":
