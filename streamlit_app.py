@@ -530,7 +530,7 @@ if choose == "Home":
 
 elif choose == "Full Projects":
     # ----- GPU ----- #
-    feature_image1 = 'images\NVIDIA-GeForce-RTX-40-GPU-Custom-Custom.png'
+    feature_image1 = 'images/NVIDIA-GeForce-RTX-40-GPU-Custom-Custom.png'
     with st.container():
         image_col, text_col = st.columns((1,3))
         with image_col:
