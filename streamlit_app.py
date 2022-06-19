@@ -546,10 +546,10 @@ elif choose == "Full Projects":
             st.markdown("Framework: Streamlit")
     col1, col2,col3= st.columns(3)
     with col1:  
-        if st.button('Read PDF',key='1'):            
+        if st.button('Read PDF',key='13'):            
             show_pdf('pdfs/GPU.pdf')
     with col2:
-        st.button('Close PDF',key='2')                   
+        st.button('Close PDF',key='14')                   
     with col3:
         download_pdf('pdfs/GPU.pdf')
 
